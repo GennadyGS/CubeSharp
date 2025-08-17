@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <Version>1.0.0</Version>
+    <Authors>Gennadii Saltyshchak</Authors>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>13.0</LangVersion>
+    <IsPackable>false</IsPackable>
+    <NameSpacePrefix>GennadyGS</NameSpacePrefix>
+    <AssemblyName>$(NameSpacePrefix).$(MSBuildProjectName)</AssemblyName>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS1591;SA1612;SA1615;SA1618</NoWarn>
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)/codeAnalysis/CodeAnalysis.targets"/>
+</Project>

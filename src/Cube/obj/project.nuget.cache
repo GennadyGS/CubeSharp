@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "zr/14pAUJsw=",
+  "success": true,
+  "projectFilePath": "C:\\Source\\Private\\Cube\\src\\Cube\\Cube.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Gennadii_Saltyshchak\\.nuget\\packages\\menees.analyzers\\3.2.2\\menees.analyzers.3.2.2.nupkg.sha512",
+    "C:\\Users\\Gennadii_Saltyshchak\\.nuget\\packages\\microsoft.codeanalysis.netanalyzers\\9.0.0\\microsoft.codeanalysis.netanalyzers.9.0.0.nupkg.sha512",
+    "C:\\Users\\Gennadii_Saltyshchak\\.nuget\\packages\\microsoft.visualstudio.threading.analyzers\\17.14.15\\microsoft.visualstudio.threading.analyzers.17.14.15.nupkg.sha512",
+    "C:\\Users\\Gennadii_Saltyshchak\\.nuget\\packages\\sonaranalyzer.csharp\\10.13.0.120203\\sonaranalyzer.csharp.10.13.0.120203.nupkg.sha512",
+    "C:\\Users\\Gennadii_Saltyshchak\\.nuget\\packages\\stylecop.analyzers.unstable\\1.2.0.556\\stylecop.analyzers.unstable.1.2.0.556.nupkg.sha512",
+    "C:\\Users\\Gennadii_Saltyshchak\\.nuget\\packages\\system.linq.async\\6.0.3\\system.linq.async.6.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -5,7 +5,8 @@ namespace Cube.Utils;
 internal static class ExpressionExtensions
 {
     public static Expression<Func<TSource, IEnumerable<TResult>>>
-        MapResultToCollection<TSource, TResult>(this Expression<Func<TSource, TResult>> expression)
+        MapResultToCollection<TSource, TResult>(
+            this Expression<Func<TSource, TResult>> expression)
     {
         var sourceParameter = Expression.Parameter(typeof(TSource));
         var body = Expression.NewArrayInit(

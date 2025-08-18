@@ -26,6 +26,7 @@ internal static class AsyncEnumerableExtensions
             Func<TSource, TKey> keySelector,
             Func<TSource, TValue> valueSelector,
             Func<TValue, TValue, TValue> aggregator)
+        where TKey : notnull
     {
         var result = new Dictionary<TKey, TValue>();
         await foreach (var item in source)

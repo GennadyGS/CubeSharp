@@ -2,20 +2,13 @@
 
 internal static class EnumerableExtensions
 {
-    public static IEnumerable<T> ConcatItem<T>(this IEnumerable<T> source, T item) =>
-        source.Concat(new[] { item });
+    public static IEnumerable<T> AppendIf<T>(this IEnumerable<T> source, T item, bool condition) =>
+        condition
+            ? source.Append(item)
+            : source;
 
     public static IEnumerable<T> ConcatToItem<T>(this IEnumerable<T> source, T item) =>
         new[] { item }.Concat(source);
-
-    public static T AggregateBy<TSource, T>(
-        this IEnumerable<TSource> source,
-        AggregationDefinition<TSource, T> aggregationDefinition) =>
-        source
-            .Select(aggregationDefinition.SelectValue)
-            .Aggregate(
-                aggregationDefinition.SeedValue,
-                aggregationDefinition.AggregationFunction);
 
     public static bool HasDuplicatesBy<TSource, T>(
         this IEnumerable<TSource> source,
@@ -24,17 +17,18 @@ internal static class EnumerableExtensions
             .GroupBy(selector)
             .Any(g => g.Count() > 1);
 
-    public static IReadOnlyDictionary<TKey, TSource>
-        ToDictionarySupportingNullKeys<TSource, TKey>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector) =>
+    public static IReadOnlyDictionary<TKey?, TSource> ToDictionarySupportingNullKeys<TSource, TKey>(
+        this IEnumerable<TSource> source,
+        Func<TSource, TKey?> keySelector)
+        where TKey : notnull =>
         source.ToDictionarySupportingNullKeys(keySelector, item => item);
 
-    public static IReadOnlyDictionary<TKey, TValue>
+    public static IReadOnlyDictionary<TKey?, TValue>
         ToDictionarySupportingNullKeys<TSource, TKey, TValue>(
             this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector,
+            Func<TSource, TKey?> keySelector,
             Func<TSource, TValue> valueSelector)
+        where TKey : notnull
     {
         var keyValuePairs = source
             .Select(item => KeyValuePair.Create(keySelector(item), valueSelector(item)))
@@ -48,6 +42,7 @@ internal static class EnumerableExtensions
             Func<TSource, TKey> keySelector,
             Func<TSource, TValue> valueSelector,
             Func<TValue, TValue, TValue> aggregator)
+        where TKey : notnull
     {
         var result = new Dictionary<TKey, TValue>();
         foreach (var item in source)

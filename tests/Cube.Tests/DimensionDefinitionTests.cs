@@ -264,7 +264,7 @@ public sealed class DimensionDefinitionTests
 
         result.IndexSelector.Compile()
             .Invoke("A")
-            .Should().BeEquivalentTo(new object[] { null });
+            .Should().BeEquivalentTo(new object?[] { null });
     }
 
     [Fact]
@@ -273,7 +273,7 @@ public sealed class DimensionDefinitionTests
         var result = DimensionDefinition.CreateDefault<string, string>();
 
         result.IndexDefinitions.Single()
-            .Should().BeEquivalentTo(IndexDefinition.Create((string)default));
+            .Should().BeEquivalentTo(IndexDefinition.Create((string?)default));
     }
 
     [Theory]
@@ -302,10 +302,10 @@ public sealed class DimensionDefinitionTests
     public void CreateForDictionaryCollection_ShouldCreateDimensionDefinitionWithCorrectIndexSelector()
     {
         var result = DimensionDefinition.CreateForDictionaryCollection(
-            r => (string)r["A"] + (string)r["B"]);
+            r => (string?)r["A"] + (string?)r["B"]);
 
         result.IndexSelector.Compile()
-            .Invoke(new Dictionary<string, object> { ["A"] = "a", ["B"] = "b" })
+            .Invoke(new Dictionary<string, object?> { ["A"] = "a", ["B"] = "b" })
             .Should().BeEquivalentTo("ab");
     }
 
@@ -313,7 +313,7 @@ public sealed class DimensionDefinitionTests
     public void CreateForDictionaryCollection_ShouldCreateDimensionDefinitionWithCorrectIndexes()
     {
         var result = DimensionDefinition.CreateForDictionaryCollection(
-            r => (string)r["A"],
+            r => (string?)r["A"],
             default,
             IndexDefinition.Create("1"),
             IndexDefinition.Create("2"));
@@ -335,7 +335,7 @@ public sealed class DimensionDefinitionTests
     public void CreateForDictionaryCollection_ShouldCreateDimensionDefinitionWithCorrectTitle(string title)
     {
         var result = DimensionDefinition.CreateForDictionaryCollection(
-            r => (string)default,
+            r => (string?)default,
             title);
 
         result.Title.Should().Be(title);
@@ -347,8 +347,8 @@ public sealed class DimensionDefinitionTests
         var result = DimensionDefinition.CreateDefaultForDictionaryCollection<string>();
 
         result.IndexSelector.Compile()
-            .Invoke(new Dictionary<string, object>())
-            .Should().BeEquivalentTo(new object[] { null });
+            .Invoke(new Dictionary<string, object?>())
+            .Should().BeEquivalentTo(new object?[] { null });
     }
 
     [Fact]
@@ -357,7 +357,7 @@ public sealed class DimensionDefinitionTests
         var result = DimensionDefinition.CreateDefaultForDictionaryCollection<string>();
 
         result.IndexDefinitions.Single()
-            .Should().BeEquivalentTo(IndexDefinition.Create((string)default));
+            .Should().BeEquivalentTo(IndexDefinition.Create((string?)default));
     }
 
     [Theory]

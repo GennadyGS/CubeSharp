@@ -24,6 +24,7 @@ public static class DimensionExtensions
     public static DimensionDefinition<TSource, TIndex> WithTitle<TSource, TIndex>(
         this DimensionDefinition<TSource, TIndex> dimension,
         string title)
+        where TIndex : notnull
     {
         dimension.Title = title;
         return dimension;
@@ -50,6 +51,7 @@ public static class DimensionExtensions
         this DimensionDefinition<TSource, TIndex> dimension,
         string key,
         object value)
+        where TIndex : notnull
     {
         dimension.AddMetadata(key, value);
         return dimension;
@@ -76,6 +78,7 @@ public static class DimensionExtensions
     public static DimensionDefinition<TSource, TIndex> WithMetadata<TSource, TIndex>(
         this DimensionDefinition<TSource, TIndex> dimension,
         params (string key, object value)[] metadata)
+        where TIndex : notnull
     {
         dimension.AddMetadata(metadata);
         return dimension;
@@ -100,7 +103,8 @@ public static class DimensionExtensions
     /// <exception cref="ArgumentException">Dimension already contains default index.</exception>
     public static DimensionDefinition<TSource, TIndex> WithLeadingDefaultIndex<TSource, TIndex>(
         this DimensionDefinition<TSource, TIndex> dimension,
-        string title = default)
+        string? title = default)
+        where TIndex : notnull
     {
         if (dimension.ContainsIndex(default))
         {
@@ -130,7 +134,8 @@ public static class DimensionExtensions
     /// <exception cref="ArgumentException">Dimension already contains default index.</exception>
     public static DimensionDefinition<TSource, TIndex> WithTrailingDefaultIndex<TSource, TIndex>(
         this DimensionDefinition<TSource, TIndex> dimension,
-        string title = default)
+        string? title = default)
+        where TIndex : notnull
     {
         if (dimension.ContainsIndex(default))
         {
@@ -138,7 +143,7 @@ public static class DimensionExtensions
         }
 
         return dimension.WithIndexDefinitions(
-            IndexDefinition.Create(dimension.IndexDefinitions.ToArray(), default, title));
+            IndexDefinition.Create(dimension.IndexDefinitions.ToArray(), default, title: title));
     }
 
     /// <summary>
@@ -156,9 +161,8 @@ public static class DimensionExtensions
     /// If index value is not found or does not have parents, <c>default</c>
     /// will be returned.
     /// </remarks>
-    public static TIndex GetParentIndex<TIndex>(
-        this Dimension<TIndex> dimension,
-        TIndex index) =>
+    public static TIndex? GetParentIndex<TIndex>(this Dimension<TIndex> dimension, TIndex index)
+        where TIndex : notnull =>
         dimension.GetAffectedIndexes(index)
             .Skip(1)
             .FirstOrDefault();

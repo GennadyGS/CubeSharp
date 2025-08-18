@@ -27,7 +27,7 @@ internal sealed class EquatableList<T>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public bool Equals(EquatableList<T> other)
+    public bool Equals(EquatableList<T>? other)
     {
         if (ReferenceEquals(null, other))
         {
@@ -42,7 +42,7 @@ internal sealed class EquatableList<T>
         return SequenceEqual(Items, other.Items);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (ReferenceEquals(null, obj))
         {

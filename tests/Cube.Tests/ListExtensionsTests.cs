@@ -153,10 +153,10 @@ public sealed class ListExtensionsTests
             },
         };
 
-    public sealed class TestCaseModel
+    public sealed record TestCaseModel
     {
-        public IReadOnlyList<IReadOnlyList<int>> Input { get; set; }
+        public required IReadOnlyList<IReadOnlyList<int>> Input { get; init; }
 
-        public IReadOnlyList<IReadOnlyList<int>> ExpectedOutput { get; set; }
+        public required IReadOnlyList<IReadOnlyList<int>> ExpectedOutput { get; init; }
     }
 }

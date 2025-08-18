@@ -73,9 +73,8 @@ public static class IndexDimensionExtensions
         return index;
     }
 
-    internal static (T value, IReadOnlyList<T> path)[] GetIndexPaths<T>(
-        this IndexDefinition<T> indexDefinition,
-        IReadOnlyCollection<T> parentPath)
+    internal static (T? value, IReadOnlyList<T?> path)[] GetIndexPaths<T>(
+        this IndexDefinition<T> indexDefinition, IReadOnlyCollection<T?> parentPath)
     {
         var path = parentPath.ConcatToItem(indexDefinition.Value).ToArray();
         return indexDefinition.Children

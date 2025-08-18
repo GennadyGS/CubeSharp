@@ -7,14 +7,14 @@ public class DefinitionBase
     private readonly Dictionary<string, object> _metadata =
         new Dictionary<string, object>();
 
-    internal DefinitionBase(string title)
+    internal DefinitionBase(string? title)
     {
         Title = title;
     }
 
     /// <summary>Gets or sets the title.</summary>
     /// <value>The title.</value>
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     /// <summary>Gets the metadata.</summary>
     /// <value>The metadata in the form of dictionary.</value>

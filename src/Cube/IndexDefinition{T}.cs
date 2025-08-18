@@ -7,8 +7,8 @@ namespace Cube;
 public sealed class IndexDefinition<T> : DefinitionBase
 {
     internal IndexDefinition(
-        T value,
-        string title,
+        T? value,
+        string? title,
         IReadOnlyCollection<IndexDefinition<T>> children,
         bool parentAfterChildren)
         : base(title)
@@ -30,7 +30,7 @@ public sealed class IndexDefinition<T> : DefinitionBase
 
     /// <summary>Gets the value of the index.</summary>
     /// <value>The value of the index.</value>
-    public T Value { get; }
+    public T? Value { get; }
 
     /// <summary>Gets the collection of the child index definitions.</summary>
     /// <value>The collection of the child index definitions.</value>
@@ -55,7 +55,7 @@ public sealed class IndexDefinition<T> : DefinitionBase
     {
         var childIndexes = Children.SelectMany(def => def.GetChildrenRecursive());
         return ParentAfterChildren
-            ? childIndexes.ConcatItem(this).ToList()
+            ? childIndexes.Append(this).ToList()
             : childIndexes.ConcatToItem(this).ToList();
     }
 }

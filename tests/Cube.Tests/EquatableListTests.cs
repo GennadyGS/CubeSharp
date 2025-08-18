@@ -47,7 +47,7 @@ public sealed class EquatableListTests
         var leftList = GetListOrNull(leftSize);
         var rightList = GetListOrNull(rightSize);
 
-        var res = leftList == rightList;
+        var res = leftList! == rightList!;
 
         res.Should().Be(expected);
     }
@@ -63,7 +63,7 @@ public sealed class EquatableListTests
         var leftList = GetListOrNull(leftSize);
         var rightList = GetListOrNull(rightSize);
 
-        var res = leftList != rightList;
+        var res = leftList! != rightList!;
 
         res.Should().Be(expected);
     }
@@ -77,7 +77,7 @@ public sealed class EquatableListTests
         var leftList = GetListOrNull(leftSize);
         var rightList = GetListOrNull(rightSize);
 
-        var res = leftList.Equals(rightList);
+        var res = leftList!.Equals(rightList);
 
         leftList.Equals(leftList).Should().BeTrue();
         res.Should().Be(expected);
@@ -89,7 +89,7 @@ public sealed class EquatableListTests
         var leftList = GetListOrNull(10);
         var rightList = Enumerable.Range(0, 10);
 
-        var res = leftList.Equals(rightList);
+        var res = leftList!.Equals(rightList);
 
         res.Should().BeFalse();
     }
@@ -98,9 +98,9 @@ public sealed class EquatableListTests
     public void Equals_ReturnsCorrectValue_WhenNullAsObjectPassed()
     {
         var leftList = GetListOrNull(10);
-        object rightList = null;
+        object? rightList = null;
 
-        var res = leftList.Equals(rightList);
+        var res = leftList!.Equals(rightList);
 
         res.Should().BeFalse();
     }
@@ -122,7 +122,7 @@ public sealed class EquatableListTests
         list.AsEnumerable().Should().BeEquivalentTo(items);
     }
 
-    private EquatableList<int> GetListOrNull(int? count) =>
+    private EquatableList<int>? GetListOrNull(int? count) =>
         count.HasValue
             ? GetList(0, count.Value)
             : null;

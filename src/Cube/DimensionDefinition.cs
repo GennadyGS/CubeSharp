@@ -33,9 +33,10 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Index definitions contain duplicates.</exception>
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<TSource, TIndex> Create<TSource, TIndex>(
-        Expression<Func<TSource, TIndex>> indexSelector,
-        string title = default,
-        params IndexDefinition<TIndex>[] indexDefinitions) =>
+        Expression<Func<TSource, TIndex?>> indexSelector,
+        string? title = default,
+        params IndexDefinition<TIndex>[] indexDefinitions)
+        where TIndex : notnull =>
         new DimensionDefinition<TSource, TIndex>(
             indexSelector.MapResultToCollection(),
             title,
@@ -66,9 +67,10 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Index definitions contain duplicates.</exception>
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<TSource, TIndex> CreateWithMultiSelector<TSource, TIndex>(
-        Expression<Func<TSource, IEnumerable<TIndex>>> indexSelector,
-        string title = default,
-        params IndexDefinition<TIndex>[] indexDefinitions) =>
+        Expression<Func<TSource, IEnumerable<TIndex?>>> indexSelector,
+        string? title = default,
+        params IndexDefinition<TIndex>[] indexDefinitions)
+        where TIndex : notnull =>
         new DimensionDefinition<TSource, TIndex>(indexSelector, title, indexDefinitions);
 
     /// <summary>
@@ -94,12 +96,13 @@ public static class DimensionDefinition
     /// or as unit dimension e.g. serving as placeholder.
     /// </remarks>
     public static DimensionDefinition<TSource, TIndex> CreateDefault<TSource, TIndex>(
-        string title = default,
-        string indexTitle = default) =>
+        string? title = default,
+        string? indexTitle = default)
+        where TIndex : notnull =>
         Create<TSource, TIndex>(
             _ => default,
             title,
-            IndexDefinition.Create((TIndex)default, indexTitle));
+            IndexDefinition.Create((TIndex?)default, indexTitle));
 
     /// <summary>
     /// Creates the instance of <seealso cref="DimensionDefinition{TSource,TIndex}"/>
@@ -122,10 +125,11 @@ public static class DimensionDefinition
     /// </returns>
     /// <exception cref="ArgumentException">Index definitions contain duplicates.</exception>
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
-    public static DimensionDefinition<IDictionary<string, object>, TIndex> CreateForDictionaryCollection<TIndex>(
-        Expression<Func<IDictionary<string, object>, TIndex>> indexSelector,
-        string title = default,
-        params IndexDefinition<TIndex>[] indexDefinitions) =>
+    public static DimensionDefinition<IDictionary<string, object?>, TIndex> CreateForDictionaryCollection<TIndex>(
+        Expression<Func<IDictionary<string, object?>, TIndex?>> indexSelector,
+        string? title = default,
+        params IndexDefinition<TIndex>[] indexDefinitions)
+        where TIndex : notnull =>
         Create(indexSelector, title, indexDefinitions);
 
     /// <summary>
@@ -152,9 +156,10 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<IDictionary<string, object>, TIndex>
         CreateForDictionaryCollectionWithMultiSelector<TIndex>(
-            Expression<Func<IDictionary<string, object>, IEnumerable<TIndex>>> indexSelector,
-            string title = default,
-            params IndexDefinition<TIndex>[] indexDefinitions) =>
+            Expression<Func<IDictionary<string, object>, IEnumerable<TIndex?>>> indexSelector,
+            string? title = default,
+            params IndexDefinition<TIndex>[] indexDefinitions)
+        where TIndex : notnull =>
         CreateWithMultiSelector(indexSelector, title, indexDefinitions);
 
     /// <summary>
@@ -177,10 +182,12 @@ public static class DimensionDefinition
     /// Default dimensions can be used for calculating only total value for dimension
     /// or as unit dimension e.g. serving as placeholder.
     /// </remarks>
-    public static DimensionDefinition<IDictionary<string, object>, TIndex> CreateDefaultForDictionaryCollection<TIndex>(
-        string title = default,
-        string indexTitle = default) =>
-        CreateDefault<IDictionary<string, object>, TIndex>(title, indexTitle);
+    public static DimensionDefinition<IDictionary<string, object?>, TIndex>
+        CreateDefaultForDictionaryCollection<TIndex>(
+            string? title = default,
+            string? indexTitle = default)
+            where TIndex : notnull =>
+        CreateDefault<IDictionary<string, object?>, TIndex>(title, indexTitle);
 
     /// <summary>
     /// Creates the instance of <seealso cref="DimensionDefinition{TSource,TIndex}"/>
@@ -214,9 +221,10 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<TSource, TIndex> CreateForCollection<TSource, TIndex>(
         IEnumerable<TSource> collection,
-        Expression<Func<TSource, TIndex>> indexSelector,
-        string title = default,
-        params IndexDefinition<TIndex>[] indexDefinitions) =>
+        Expression<Func<TSource, TIndex?>> indexSelector,
+        string? title = default,
+        params IndexDefinition<TIndex>[] indexDefinitions)
+        where TIndex : notnull =>
         Create(indexSelector, title, indexDefinitions);
 
     /// <summary>
@@ -250,10 +258,12 @@ public static class DimensionDefinition
     /// </remarks>
     /// <exception cref="ArgumentException">Index definitions contain duplicates.</exception>
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
-    public static DimensionDefinition<TSource, TIndex> CreateForCollectionWithMultiSelector<TSource, TIndex>(
-        IEnumerable<TSource> collection,
-        Expression<Func<TSource, IEnumerable<TIndex>>> indexSelector,
-        string title = default,
-        params IndexDefinition<TIndex>[] indexDefinitions) =>
-        CreateWithMultiSelector(indexSelector, title, indexDefinitions);
+    public static DimensionDefinition<TSource, TIndex>
+        CreateForCollectionWithMultiSelector<TSource, TIndex>(
+            IEnumerable<TSource> collection,
+            Expression<Func<TSource, IEnumerable<TIndex?>>> indexSelector,
+            string? title = default,
+            params IndexDefinition<TIndex>[] indexDefinitions)
+            where TIndex : notnull =>
+            CreateWithMultiSelector(indexSelector, title, indexDefinitions);
 }

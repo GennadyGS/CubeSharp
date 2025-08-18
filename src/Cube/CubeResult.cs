@@ -8,20 +8,21 @@ namespace Cube;
 /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
 /// <typeparam name="T">The type of the aggregation result.</typeparam>
 public sealed class CubeResult<TIndex, T>
+    where TIndex : notnull
 {
     internal CubeResult(
-        IReadOnlyDictionary<IReadOnlyList<TIndex>, T> resultMap,
+        IReadOnlyDictionary<IReadOnlyList<TIndex?>, T> resultMap,
         T defaultValue,
         IReadOnlyList<Dimension<TIndex>> allDimensions)
-        : this(resultMap, defaultValue, allDimensions, Array.Empty<(int, TIndex)>())
+        : this(resultMap, defaultValue, allDimensions, Array.Empty<(int, TIndex?)>())
     {
     }
 
     private CubeResult(
-        IReadOnlyDictionary<IReadOnlyList<TIndex>, T> resultMap,
+        IReadOnlyDictionary<IReadOnlyList<TIndex?>, T> resultMap,
         T defaultValue,
         IReadOnlyList<Dimension<TIndex>> allDimensions,
-        IReadOnlyList<(int number, TIndex index)> boundDimensionNumbersAndIndexes)
+        IReadOnlyList<(int number, TIndex? index)> boundDimensionNumbersAndIndexes)
     {
         IReadOnlyList<int> GetFreeDimensionNumbers()
         {
@@ -38,7 +39,7 @@ public sealed class CubeResult<TIndex, T>
         AllDimensions = allDimensions;
         BoundDimensionNumbersAndIndexes = boundDimensionNumbersAndIndexes;
         FreeDimensionNumbers = GetFreeDimensionNumbers();
-        Key = new TIndex[allDimensions.Count].SetValues(BoundDimensionNumbersAndIndexes);
+        Key = new TIndex?[allDimensions.Count].SetValues(BoundDimensionNumbersAndIndexes);
     }
 
     /// <summary>Gets the number of the free dimensions.</summary>
@@ -49,7 +50,7 @@ public sealed class CubeResult<TIndex, T>
     /// <value>The number of the bound dimensions.</value>
     public int BoundDimensionCount => BoundDimensionNumbersAndIndexes.Count;
 
-    private IReadOnlyDictionary<IReadOnlyList<TIndex>, T> ResultMap { get; }
+    private IReadOnlyDictionary<IReadOnlyList<TIndex?>, T> ResultMap { get; }
 
     private T DefaultValue { get; }
 
@@ -57,9 +58,9 @@ public sealed class CubeResult<TIndex, T>
 
     private IReadOnlyList<int> FreeDimensionNumbers { get; }
 
-    private IReadOnlyList<(int number, TIndex index)> BoundDimensionNumbersAndIndexes { get; }
+    private IReadOnlyList<(int number, TIndex? index)> BoundDimensionNumbersAndIndexes { get; }
 
-    private IReadOnlyList<TIndex> Key { get; }
+    private IReadOnlyList<TIndex?> Key { get; }
 
     /// <summary>
     /// Slices the current instance of <see cref="CubeResult{TIndex, T}"/>
@@ -73,7 +74,7 @@ public sealed class CubeResult<TIndex, T>
     /// The index in the first free dimension
     /// by which to slice the <see cref="CubeResult{TIndex, T}"/>.
     /// </param>
-    public CubeResult<TIndex, T> this[TIndex index] => Slice(0, index);
+    public CubeResult<TIndex, T> this[TIndex? index] => Slice(0, index);
 
     /// <summary>
     /// Slices the current instance of <see cref="CubeResult{TIndex, T}"/>
@@ -93,11 +94,11 @@ public sealed class CubeResult<TIndex, T>
     /// <exception cref="ArgumentException">
     /// Dimension number is out of range.
     /// </exception>
-    public CubeResult<TIndex, T> Slice(Index dimensionNumber, TIndex index)
+    public CubeResult<TIndex, T> Slice(Index dimensionNumber, TIndex? index)
     {
         var freeDimensionNumber = GetFreeDimensionNumber(dimensionNumber);
         var updatedBoundDimensionNumbersAndIndexes =
-            BoundDimensionNumbersAndIndexes.ConcatItem((freeDimensionNumber, index)).ToList();
+            BoundDimensionNumbersAndIndexes.Append((freeDimensionNumber, index)).ToList();
         return new CubeResult<TIndex, T>(
             ResultMap, DefaultValue, AllDimensions, updatedBoundDimensionNumbersAndIndexes);
     }
@@ -122,7 +123,8 @@ public sealed class CubeResult<TIndex, T>
     /// <exception cref="ArgumentException">
     /// Dimension number is out of range.
     /// </exception>
-    public CubeResult<TIndex, T> Slice(params (Index dimensionNumber, TIndex index)[] dimensionsAndIndexes)
+    public CubeResult<TIndex, T> Slice(
+        params (Index dimensionNumber, TIndex? index)[] dimensionsAndIndexes)
     {
         if (dimensionsAndIndexes.HasDuplicatesBy(item => item.dimensionNumber))
         {
@@ -159,7 +161,7 @@ public sealed class CubeResult<TIndex, T>
     /// <exception cref="InvalidOperationException">
     /// Cube result does not have any free dimensions.
     /// </exception>
-    public T GetValue(TIndex index)
+    public T GetValue(TIndex? index)
     {
         if (FreeDimensionCount <= 0)
         {
@@ -187,7 +189,7 @@ public sealed class CubeResult<TIndex, T>
     /// <exception cref="ArgumentException">
     /// Number of specified indexes is greater than number of dimensions.
     /// </exception>
-    public T GetValue(params TIndex[] indexes)
+    public T GetValue(params TIndex?[] indexes)
     {
         if (indexes.Length > FreeDimensionCount)
         {
@@ -239,7 +241,7 @@ public sealed class CubeResult<TIndex, T>
     /// <exception cref="ArgumentException">
     /// Bound dimension number is out of range.
     /// </exception>
-    public TIndex GetBoundIndex(Index dimensionNumber) =>
+    public TIndex? GetBoundIndex(Index dimensionNumber) =>
         GetBoundDimensionNumberAndIndex(dimensionNumber).index;
 
     /// <summary>Gets the bound dimension by its number.</summary>
@@ -248,7 +250,7 @@ public sealed class CubeResult<TIndex, T>
     /// <exception cref="ArgumentException">
     /// Bound dimension number is out of range.
     /// </exception>
-    public (Dimension<TIndex> dimension, TIndex index) GetBoundDimensionAndIndex(
+    public (Dimension<TIndex> dimension, TIndex? index) GetBoundDimensionAndIndex(
         Index dimensionNumber)
     {
         var (number, index) = GetBoundDimensionNumberAndIndex(dimensionNumber);
@@ -263,7 +265,7 @@ public sealed class CubeResult<TIndex, T>
     /// The array of tuples, containing the bound dimension and
     /// the bound index, associated with this dimension.
     /// </returns>
-    public (Dimension<TIndex> dimension, TIndex index)[] GetBoundDimensionsAndIndexes() =>
+    public (Dimension<TIndex>, TIndex? index)[] GetBoundDimensionsAndIndexes() =>
         BoundDimensionNumbersAndIndexes
             .Select(item => (AllDimensions[item.number], item.index))
             .ToArray();
@@ -275,7 +277,7 @@ public sealed class CubeResult<TIndex, T>
     /// <returns>
     /// Dictionary, in which key is list of indexes, and value is aggregated value.
     /// </returns>
-    public IReadOnlyDictionary<IReadOnlyList<TIndex>, T> AsDictionary()
+    public Dictionary<IReadOnlyList<TIndex?>, T> AsDictionary()
     {
         var boundIndexes = BoundDimensionNumbersAndIndexes
             .Select(item => item.number)
@@ -289,7 +291,7 @@ public sealed class CubeResult<TIndex, T>
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-    private T GetValueFromResultMap(IReadOnlyList<TIndex> key) =>
+    private T GetValueFromResultMap(IReadOnlyList<TIndex?> key) =>
         ResultMap.GetValueOrDefault(key.ToEquatableList(), DefaultValue);
 
     private int GetFreeDimensionNumber(Index dimensionNumber)
@@ -304,7 +306,7 @@ public sealed class CubeResult<TIndex, T>
         return FreeDimensionNumbers[numberValue];
     }
 
-    private (int number, TIndex index) GetBoundDimensionNumberAndIndex(Index dimensionNumber)
+    private (int number, TIndex? index) GetBoundDimensionNumberAndIndex(Index dimensionNumber)
     {
         var dimensionNumberValue = dimensionNumber.GetOffset(BoundDimensionCount);
         if (dimensionNumberValue >= BoundDimensionCount)

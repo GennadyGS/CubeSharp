@@ -23,16 +23,16 @@ public sealed class CubeResultTests
     [Fact]
     public void AsDictionary_ShouldReturnCorrectResult()
     {
-        bool AInDimension(string value) =>
+        bool AInDimension(string? value) =>
             TestDimensionDefinitions.A.ContainsIndex(value);
 
         bool BInDimension(int value) =>
             TestDimensionDefinitions.B.ContainsIndex(value.ToString());
 
-        IEnumerable<KeyValuePair<string[], long?>> GetEntriesGroupedBy(
+        IEnumerable<KeyValuePair<string?[], long?>> GetEntriesGroupedBy(
             Func<TestSourceRecord, bool> predicate,
-            Func<TestSourceRecord, string> getA,
-            Func<TestSourceRecord, string> getB) =>
+            Func<TestSourceRecord, string?> getA,
+            Func<TestSourceRecord, string?> getB) =>
             TestSourceData.Records
                 .Where(predicate)
                 .GroupBy(r => (A: getA(r), B: getB(r)))
@@ -101,9 +101,9 @@ public sealed class CubeResultTests
         bool BInDimension(int value) =>
             TestDimensionDefinitions.B.ContainsIndex(value.ToString());
 
-        IEnumerable<KeyValuePair<string[], long?>> GetEntriesGroupedBy(
+        IEnumerable<KeyValuePair<string?[], long?>> GetEntriesGroupedBy(
             Func<TestSourceRecord, bool> predicate,
-            Func<TestSourceRecord, string> getB) =>
+            Func<TestSourceRecord, string?> getB) =>
             TestSourceData.Records
                 .Where(r => (indexA == default || r.A == indexA) && predicate(r))
                 .GroupBy(getB)

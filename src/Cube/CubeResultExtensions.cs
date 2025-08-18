@@ -23,8 +23,8 @@ public static class CubeResultExtensions
     /// by which to slice the <see cref="CubeResult{TIndex, T}"/>.
     /// </param>
     public static CubeResult<TIndex, T> Slice<TIndex, T>(
-        this CubeResult<TIndex, T> cubeResult,
-        TIndex index) =>
+        this CubeResult<TIndex, T> cubeResult, TIndex index)
+        where TIndex : notnull =>
         cubeResult.Slice(0, index);
 
     /// <summary>
@@ -46,8 +46,8 @@ public static class CubeResultExtensions
     /// Dimension number is out of range.
     /// </exception>
     public static CubeResult<TIndex, T> Slice<TIndex, T>(
-        this CubeResult<TIndex, T> cubeResult,
-        params TIndex[] indexes) =>
+        this CubeResult<TIndex, T> cubeResult, params TIndex?[] indexes)
+        where TIndex : notnull =>
         cubeResult.Slice(
             indexes
                 .Select((index, dimensionNumber) => ((Index)dimensionNumber, index))
@@ -72,8 +72,8 @@ public static class CubeResultExtensions
     /// Dimension number is out of range.
     /// </exception>
     public static IEnumerable<CubeResult<TIndex, T>> BreakdownByDimensions<TIndex, T>(
-        this CubeResult<TIndex, T> cubeResult,
-        Range dimensionNumbersRange)
+        this CubeResult<TIndex, T> cubeResult, Range dimensionNumbersRange)
+        where TIndex : notnull
     {
         var (offset, length) = dimensionNumbersRange.GetOffsetAndLength(cubeResult.FreeDimensionCount);
         return cubeResult.BreakdownByDimensions(
@@ -101,8 +101,8 @@ public static class CubeResultExtensions
     /// Dimension numbers should not contain duplicates.
     /// </exception>
     public static IEnumerable<CubeResult<TIndex, T>> BreakdownByDimensions<TIndex, T>(
-        this CubeResult<TIndex, T> cubeResult,
-        params Index[] dimensionNumbers) =>
+        this CubeResult<TIndex, T> cubeResult, params Index[] dimensionNumbers)
+        where TIndex : notnull =>
         cubeResult.BreakdownByDimensions(
             dimensionNumbers
                 .Select(index => index.GetOffset(cubeResult.FreeDimensionCount))
@@ -124,8 +124,8 @@ public static class CubeResultExtensions
     /// Bound dimension number is out of range.
     /// </exception>
     public static IndexDefinition<TIndex> GetBoundIndexDefinition<TIndex, T>(
-        this CubeResult<TIndex, T> cubeResult,
-        Index dimensionNumber)
+        this CubeResult<TIndex, T> cubeResult, Index dimensionNumber)
+        where TIndex : notnull
     {
         var (dimension, index) = cubeResult.GetBoundDimensionAndIndex(dimensionNumber);
         return dimension[index];
@@ -134,6 +134,7 @@ public static class CubeResultExtensions
     private static IEnumerable<CubeResult<TIndex, T>> BreakdownByDimensions<TIndex, T>(
         this CubeResult<TIndex, T> cubeResult,
         params int[] dimensionNumbers)
+        where TIndex : notnull
     {
         if (dimensionNumbers.HasDuplicatesBy(x => x))
         {

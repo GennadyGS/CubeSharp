@@ -8,10 +8,11 @@ namespace Cube;
 /// </typeparam>
 /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
 public sealed class DimensionDefinition<TSource, TIndex> : Dimension<TIndex>
+    where TIndex : notnull
 {
     internal DimensionDefinition(
-        Expression<Func<TSource, IEnumerable<TIndex>>> indexSelector,
-        string title,
+        Expression<Func<TSource, IEnumerable<TIndex?>>> indexSelector,
+        string? title,
         params IndexDefinition<TIndex>[] indexDefinitions)
         : this(indexSelector, indexSelector.Compile(), title, indexDefinitions)
     {
@@ -20,9 +21,9 @@ public sealed class DimensionDefinition<TSource, TIndex> : Dimension<TIndex>
     }
 
     private DimensionDefinition(
-        Expression<Func<TSource, IEnumerable<TIndex>>> indexSelector,
-        Func<TSource, IEnumerable<TIndex>> indexSelectorFunc,
-        string title,
+        Expression<Func<TSource, IEnumerable<TIndex?>>> indexSelector,
+        Func<TSource, IEnumerable<TIndex?>> indexSelectorFunc,
+        string? title,
         params IndexDefinition<TIndex>[] indexDefinitions)
         : base(title, indexDefinitions)
     {
@@ -35,9 +36,9 @@ public sealed class DimensionDefinition<TSource, TIndex> : Dimension<TIndex>
     /// <remarks>
     /// The function to map the element of source collection to the index value.
     /// </remarks>
-    public Expression<Func<TSource, IEnumerable<TIndex>>> IndexSelector { get; }
+    public Expression<Func<TSource, IEnumerable<TIndex?>>> IndexSelector { get; }
 
-    private Func<TSource, IEnumerable<TIndex>> IndexSelectorFunc { get; }
+    private Func<TSource, IEnumerable<TIndex?>> IndexSelectorFunc { get; }
 
     /// <summary>
     /// Selects the list of indexes by applying <seealso cref="IndexSelector"/>
@@ -48,16 +49,16 @@ public sealed class DimensionDefinition<TSource, TIndex> : Dimension<TIndex>
     /// The list of indexes which are returned from <seealso cref="IndexSelector"/>
     /// applied to source collection.
     /// </returns>
-    public IEnumerable<TIndex> SelectIndexes(TSource source) =>
+    public IEnumerable<TIndex?> SelectIndexes(TSource source) =>
         IndexSelectorFunc.Invoke(source);
 
-    internal IEnumerable<TIndex> GetAffectedIndexes(TSource source) =>
+    internal IEnumerable<TIndex?> GetAffectedIndexes(TSource source) =>
         GetPrimaryIndexes(source)
             .SelectMany(GetAffectedIndexes)
             .Distinct()
             .DefaultIfEmpty();
 
-    internal IEnumerable<TIndex> GetPrimaryIndexes(TSource source) =>
+    internal IEnumerable<TIndex?> GetPrimaryIndexes(TSource source) =>
         SelectIndexes(source).Select(GetPrimaryIndex);
 
     internal DimensionDefinition<TSource, TIndex> WithIndexDefinitions(

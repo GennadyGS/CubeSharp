@@ -8,7 +8,7 @@ public sealed class IndexDefinitionTests
     [Fact]
     public void Create_ShouldBeSuccess_WhenIndexIsDefault()
     {
-        var result = IndexDefinition.Create((string)default);
+        var result = IndexDefinition.Create((string?)default);
 
         result.Value.Should().Be(default);
     }
@@ -33,7 +33,7 @@ public sealed class IndexDefinitionTests
             "a",
             null,
             IndexDefinition.Create("b"),
-            IndexDefinition.Create((string)default));
+            IndexDefinition.Create((string?)default));
 
         action.Should().Throw<ArgumentException>();
     }

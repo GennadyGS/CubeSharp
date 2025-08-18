@@ -21,6 +21,7 @@ public static class CubeBuilder
         this IEnumerable<TSource> source,
         AggregationDefinition<TSource, T> aggregationDefinition,
         params DimensionDefinition<TSource, TIndex>[] dimensionDefinitions)
+        where TIndex : notnull
     {
         var resultMap = source
             .SelectMany(
@@ -49,6 +50,7 @@ public static class CubeBuilder
         this IAsyncEnumerable<TSource> source,
         AggregationDefinition<TSource, T> aggregationDefinition,
         params DimensionDefinition<TSource, TIndex>[] dimensionDefinitions)
+        where TIndex : notnull
     {
         var resultMap = await source
             .SelectManyAsync(
@@ -62,9 +64,10 @@ public static class CubeBuilder
             resultMap, aggregationDefinition.SeedValue, dimensionDefinitions);
     }
 
-    private static IEnumerable<IReadOnlyList<TIndex>> GetAffectedKeys<TSource, TIndex>(
+    private static IEnumerable<IReadOnlyList<TIndex?>> GetAffectedKeys<TSource, TIndex>(
         TSource record,
-        DimensionDefinition<TSource, TIndex>[] dimensionDefinitions) =>
+        DimensionDefinition<TSource, TIndex>[] dimensionDefinitions)
+        where TIndex : notnull =>
         dimensionDefinitions
             .Select(def => def.GetAffectedIndexes(record).ToArray())
             .ToArray()

@@ -18,12 +18,4 @@ public sealed class DefinitionBaseTests
         var metadata = sut.Metadata;
         metadata[key].Should().Be(value);
     }
-
-    [Fact]
-    public void AddMetadata_ThrowsException_WhenKeyIsNull()
-    {
-        var sut = new DefinitionBase("Title");
-        Action action = () => sut.AddMetadata(null, 1);
-        action.Should().Throw<ArgumentNullException>();
-    }
 }

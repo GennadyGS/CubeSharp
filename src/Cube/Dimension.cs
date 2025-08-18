@@ -7,9 +7,10 @@ namespace Cube;
 /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
 public class Dimension<TIndex>
     : DefinitionBase, IEnumerable<IndexDefinition<TIndex>>
+    where TIndex : notnull
 {
     protected Dimension(
-        string title,
+        string? title,
         IReadOnlyCollection<IndexDefinition<TIndex>> indexDefinitions)
         : base(title)
     {
@@ -28,16 +29,16 @@ public class Dimension<TIndex>
     /// <value>The collection of the top-level index definitions.</value>
     public IReadOnlyCollection<IndexDefinition<TIndex>> IndexDefinitions { get; }
 
-    private IReadOnlyDictionary<TIndex, IndexDefinition<TIndex>> IndexMap { get; }
+    private IReadOnlyDictionary<TIndex?, IndexDefinition<TIndex>> IndexMap { get; }
 
-    private IReadOnlyDictionary<TIndex, IReadOnlyList<TIndex>> AffectedIndexesMap { get; }
+    private IReadOnlyDictionary<TIndex?, IReadOnlyList<TIndex?>> AffectedIndexesMap { get; }
 
     /// <summary>Retrieves the index definition by its value.</summary>
     /// <param name="index">The value of the index to locate.</param>
     /// <returns>The desired index definition.</returns>
     /// <remarks>Searches by index definition hierarchy recursively.</remarks>
     /// <exception cref="ArgumentException">Index is not found in dimension.</exception>
-    public IndexDefinition<TIndex> this[TIndex index] =>
+    public IndexDefinition<TIndex> this[TIndex? index] =>
         IndexMap.TryGetValue(index, out var result)
             ? result
             : throw new ArgumentException($"Index {index} is not found in dimension", nameof(index));
@@ -49,7 +50,7 @@ public class Dimension<TIndex>
     /// <returns>
     /// <c>true</c> if the dimension contains an index; otherwise, <c>false</c>.
     /// </returns>
-    public bool ContainsIndex(TIndex index) =>
+    public bool ContainsIndex(TIndex? index) =>
         IndexMap.ContainsKey(index);
 
     /// <summary>
@@ -65,17 +66,17 @@ public class Dimension<TIndex>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    internal IEnumerable<TIndex> GetAffectedIndexes(TIndex primaryIndex) =>
+    internal IEnumerable<TIndex?> GetAffectedIndexes(TIndex? primaryIndex) =>
         AffectedIndexesMap.GetValueOrDefault(
             primaryIndex,
             new[] { default(TIndex) });
 
-    internal TIndex GetPrimaryIndex(TIndex index) =>
+    internal TIndex? GetPrimaryIndex(TIndex? index) =>
         ContainsIndex(index)
             ? index
             : default;
 
-    private IReadOnlyDictionary<TIndex, IndexDefinition<TIndex>> GetIndexMap()
+    private IReadOnlyDictionary<TIndex?, IndexDefinition<TIndex>> GetIndexMap()
     {
         var indexDefinitionsRecursive = GetIndexDefinitionsRecursive();
         if (indexDefinitionsRecursive.HasDuplicatesBy(def => def.Value))
@@ -91,12 +92,12 @@ public class Dimension<TIndex>
             .SelectMany(indexDefinition => indexDefinition.GetChildrenRecursive())
             .ToList();
 
-    private IReadOnlyDictionary<TIndex, IReadOnlyList<TIndex>> GetAffectedIndexesMap()
+    private IReadOnlyDictionary<TIndex?, IReadOnlyList<TIndex?>> GetAffectedIndexesMap()
     {
-        IReadOnlyCollection<TIndex> GetRootPath(IndexDefinition<TIndex> index) =>
+        IReadOnlyCollection<TIndex?> GetRootPath(IndexDefinition<TIndex> index) =>
             index.IsDefault
-                ? Array.Empty<TIndex>()
-                : new[] { (TIndex)default };
+                ? Array.Empty<TIndex?>()
+                : new[] { (TIndex?)default };
 
         return IndexDefinitions
             .SelectMany(index => index.GetIndexPaths(GetRootPath(index)))

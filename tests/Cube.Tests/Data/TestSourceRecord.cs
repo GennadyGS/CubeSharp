@@ -2,13 +2,13 @@
 
 internal sealed class TestSourceRecord
 {
-    public string A { get; set; }
+    public string? A { get; init; }
 
-    public int B { get; set; }
+    public int B { get; init; }
 
-    public decimal C { get; set; }
+    public decimal C { get; init; }
 
-    public long? D { get; set; }
+    public long? D { get; init; }
 
-    public int[] E { get; set; }
+    public int[] E { get; init; } = [];
 }

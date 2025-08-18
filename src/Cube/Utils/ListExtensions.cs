@@ -48,8 +48,7 @@ internal static class ListExtensions
     }
 
     public static IReadOnlyList<T> SelectAllAt<T>(
-        this IReadOnlyList<T> source,
-        IReadOnlyList<int> indexes) =>
+        this IReadOnlyList<T> source, IReadOnlyList<int> indexes) =>
         indexes
             .Select(index => source[index])
             .ToList();

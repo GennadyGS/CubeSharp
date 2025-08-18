@@ -8,11 +8,11 @@ namespace Cube.Tests;
 
 public sealed class DictionarySupportingNullKeysTests
 {
-    private static readonly KeyValuePair<string, int>[] InputWithNull =
+    private static readonly KeyValuePair<string?, int>[] InputWithNull =
     {
-        KeyValuePair.Create("A", 1),
-        KeyValuePair.Create("B", 2),
-        KeyValuePair.Create((string)default, 3),
+        KeyValuePair.Create((string?)"A", 1),
+        KeyValuePair.Create((string?)"B", 2),
+        KeyValuePair.Create((string?)null, 3),
     };
 
     private static readonly KeyValuePair<string, int>[] InputWithoutNull =
@@ -21,8 +21,8 @@ public sealed class DictionarySupportingNullKeysTests
         KeyValuePair.Create("B", 2),
     };
 
-    public static TheoryData<KeyValuePair<string, int>[]> TestInputs =>
-        TheoryDataBuilder.TheoryData(InputWithNull, InputWithoutNull);
+    public static TheoryData<KeyValuePair<string?, int>[]> TestInputs =>
+        TheoryDataBuilder.TheoryData(InputWithNull, GetCastedInputWithoutNull());
 
     [Fact]
     public void Constructor_Should_ThrowArgumentException_WhenDefaultKeyIsDuplicated()
@@ -31,8 +31,8 @@ public sealed class DictionarySupportingNullKeysTests
             new DictionarySupportingNullKeys<string, int>(
                 new[]
                 {
-                    KeyValuePair.Create((string)default, 1),
-                    KeyValuePair.Create((string)default, 2),
+                    KeyValuePair.Create((string?)default, 1),
+                    KeyValuePair.Create((string?)default, 2),
                 });
 
         action.Should().Throw<ArgumentException>();
@@ -40,7 +40,7 @@ public sealed class DictionarySupportingNullKeysTests
 
     [Theory]
     [MemberData(nameof(TestInputs))]
-    public void Count_ShouldReturnCorrectResult(KeyValuePair<string, int>[] input)
+    public void Count_ShouldReturnCorrectResult(KeyValuePair<string?, int>[] input)
     {
         var sut = new DictionarySupportingNullKeys<string, int>(input);
 
@@ -51,7 +51,7 @@ public sealed class DictionarySupportingNullKeysTests
 
     [Theory]
     [MemberData(nameof(TestInputs))]
-    public void Keys_ShouldReturnCorrectResult(KeyValuePair<string, int>[] input)
+    public void Keys_ShouldReturnCorrectResult(KeyValuePair<string?, int>[] input)
     {
         var sut = new DictionarySupportingNullKeys<string, int>(input);
 
@@ -62,7 +62,7 @@ public sealed class DictionarySupportingNullKeysTests
 
     [Theory]
     [MemberData(nameof(TestInputs))]
-    public void Values_ShouldReturnCorrectResult(KeyValuePair<string, int>[] input)
+    public void Values_ShouldReturnCorrectResult(KeyValuePair<string?, int>[] input)
     {
         var sut = new DictionarySupportingNullKeys<string, int>(input);
 
@@ -73,7 +73,7 @@ public sealed class DictionarySupportingNullKeysTests
 
     [Theory]
     [MemberData(nameof(TestInputs))]
-    public void Index_ShouldReturnCorrectResult_WhenKeyIsNotNull(KeyValuePair<string, int>[] input)
+    public void Index_ShouldReturnCorrectResult_WhenKeyIsNotNull(KeyValuePair<string?, int>[] input)
     {
         var sut = new DictionarySupportingNullKeys<string, int>(input);
 
@@ -96,7 +96,7 @@ public sealed class DictionarySupportingNullKeysTests
     [Fact]
     public void Index_ShouldThrowKeyNotFountException_WhenKeyIsNullAndDoesNotContainsNullKey()
     {
-        var sut = new DictionarySupportingNullKeys<string, int>(InputWithoutNull);
+        var sut = new DictionarySupportingNullKeys<string, int>(GetCastedInputWithoutNull());
 
         Func<int> action = () => sut[default];
 
@@ -105,7 +105,7 @@ public sealed class DictionarySupportingNullKeysTests
 
     [Theory]
     [MemberData(nameof(TestInputs))]
-    public void GetEnumerator_ShouldReturnCorrectResult(KeyValuePair<string, int>[] input)
+    public void GetEnumerator_ShouldReturnCorrectResult(KeyValuePair<string?, int>[] input)
     {
         var sut = new DictionarySupportingNullKeys<string, int>(input);
 
@@ -117,12 +117,17 @@ public sealed class DictionarySupportingNullKeysTests
     [Fact]
     public void NonGenericEnumerator_ShouldReturnEmpty_WhenInputIsEmpty()
     {
-        var sut = new DictionarySupportingNullKeys<string, int>(Array.Empty<KeyValuePair<string, int>>());
+        var sut = new DictionarySupportingNullKeys<string, int>([]);
 
         var result = ((IEnumerable)sut).GetEnumerator();
 
         result.MoveNext().Should().BeFalse();
     }
+
+    private static KeyValuePair<string?, int>[] GetCastedInputWithoutNull() =>
+        InputWithoutNull
+            .Select(kvp => KeyValuePair.Create((string?)kvp.Key, kvp.Value))
+            .ToArray();
 
     private static IReadOnlyCollection<string> GetAllKeys() =>
         InputWithoutNull.Select(kvp => kvp.Key).ToList();

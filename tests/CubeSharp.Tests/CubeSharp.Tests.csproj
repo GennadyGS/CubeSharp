@@ -11,6 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Cube\CubeSharp.csproj" />
+    <ProjectReference Include="..\..\src\CubeSharp\CubeSharp.csproj" />
   </ItemGroup>
 </Project>

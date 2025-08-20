@@ -1,12 +1,12 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="Cube.md" />
+    <File Path="CubeSharp.md" />
     <File Path="Directory.Build.props" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Cube/CubeSharp.csproj" />
+    <Project Path="src/CubeSharp/CubeSharp.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Cube.Tests/CubeSharp.Tests.csproj" />
+    <Project Path="tests/CubeSharp.Tests/CubeSharp.Tests.csproj" />
   </Folder>
 </Solution>

@@ -1,8 +1,9 @@
-﻿using Cube.Tests.Data;
+﻿using Cube;
+using CubeSharp.Tests.Data;
 using FluentAssertions;
 using Xunit;
 
-namespace Cube.Tests.CubeResultTests;
+namespace CubeSharp.Tests.CubeResultTests;
 
 public sealed class GetValueTests
 {

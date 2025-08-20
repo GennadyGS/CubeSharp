@@ -4,9 +4,9 @@
     <File Path="Directory.Build.props" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Cube/Cube.csproj" />
+    <Project Path="src/Cube/CubeSharp.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Cube.Tests/Cube.Tests.csproj" />
+    <Project Path="tests/Cube.Tests/CubeSharp.Tests.csproj" />
   </Folder>
 </Solution>

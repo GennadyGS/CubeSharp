@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
+using Cube;
 
-namespace Cube.Tests.Data;
+namespace CubeSharp.Tests.Data;
 
 internal static class TestDimensionDefinitions
 {

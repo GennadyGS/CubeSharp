@@ -1,8 +1,9 @@
 ﻿using System.Collections;
+using Cube;
 using FluentAssertions;
 using Xunit;
 
-namespace Cube.Tests;
+namespace CubeSharp.Tests;
 
 public sealed class DimensionDefinitionTests
 {

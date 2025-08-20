@@ -1,7 +1,8 @@
-﻿using FluentAssertions;
+﻿using Cube;
+using FluentAssertions;
 using Xunit;
 
-namespace Cube.Tests;
+namespace CubeSharp.Tests;
 
 public sealed class AggregationDefinitionTests
 {

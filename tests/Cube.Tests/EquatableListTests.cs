@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace Cube.Tests;
+namespace CubeSharp.Tests;
 
 public sealed class EquatableListTests
 {

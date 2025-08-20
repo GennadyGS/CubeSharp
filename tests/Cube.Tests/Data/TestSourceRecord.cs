@@ -1,4 +1,4 @@
-﻿namespace Cube.Tests.Data;
+﻿namespace CubeSharp.Tests.Data;
 
 internal sealed class TestSourceRecord
 {

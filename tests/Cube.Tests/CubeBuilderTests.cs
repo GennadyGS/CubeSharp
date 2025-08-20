@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Globalization;
-using Cube.Tests.Data;
+using Cube;
+using CubeSharp.Tests.Data;
 using FluentAssertions;
 using Xunit;
 
-namespace Cube.Tests;
+namespace CubeSharp.Tests;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Layout",

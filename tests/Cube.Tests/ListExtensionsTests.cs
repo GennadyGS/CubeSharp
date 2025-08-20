@@ -1,9 +1,9 @@
-﻿using Cube.Tests.Utils;
-using Cube.Utils;
+﻿using Cube.Utils;
+using CubeSharp.Tests.Utils;
 using FluentAssertions;
 using Xunit;
 
-namespace Cube.Tests;
+namespace CubeSharp.Tests;
 
 public sealed class ListExtensionsTests
 {

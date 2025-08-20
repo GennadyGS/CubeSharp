@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Cube.Tests.Utils;
+namespace CubeSharp.Tests.Utils;
 
 internal static class TheoryDataBuilder
 {

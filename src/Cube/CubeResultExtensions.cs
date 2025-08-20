@@ -11,17 +11,19 @@ public static class CubeResultExtensions
     /// Slices the <paramref name="cubeResult"/> by the index <paramref name="index"/>
     /// in the first free dimension.
     /// </summary>
+    /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
+    /// <typeparam name="T">The type of the aggregated value.</typeparam>
     /// <param name="cubeResult">
     /// The source instance of the <seealso cref="CubeResult{TIndex,T}"/>.
     /// </param>
-    /// <value>
-    /// The new instance of <see cref="CubeResult{TIndex, T}"/> sliced
-    /// by the index <paramref name="index"/> in the first free dimension.
-    /// </value>
     /// <param name="index">
     /// The index in the first free dimension
     /// by which to slice the <see cref="CubeResult{TIndex, T}"/>.
     /// </param>
+    /// <returns>
+    /// A new instance of <see cref="CubeResult{TIndex, T}"/> sliced
+    /// by the index <paramref name="index"/> in the first free dimension.
+    /// </returns>
     public static CubeResult<TIndex, T> Slice<TIndex, T>(
         this CubeResult<TIndex, T> cubeResult, TIndex index)
         where TIndex : notnull =>
@@ -31,6 +33,8 @@ public static class CubeResultExtensions
     /// Slices the <paramref name="cubeResult"/> by the indexes
     /// <paramref name="indexes"/> specified in order of free dimensions.
     /// </summary>
+    /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
+    /// <typeparam name="T">The type of the aggregated value.</typeparam>
     /// <param name="cubeResult">
     /// The source instance of the <seealso cref="CubeResult{TIndex,T}"/>.
     /// </param>
@@ -39,7 +43,7 @@ public static class CubeResultExtensions
     /// by which to slice the <see cref="CubeResult{TIndex, T}"/>.
     /// </param>
     /// <returns>
-    /// The new instance of the <see cref="CubeResult{TIndex, T}"/> sliced by
+    /// A new instance of the <see cref="CubeResult{TIndex, T}"/> sliced by
     /// the indexes <paramref name="indexes"/> specified in order of free dimensions.
     /// </returns>
     /// <exception cref="ArgumentException">
@@ -57,6 +61,8 @@ public static class CubeResultExtensions
     /// Breaks down the <paramref name="cubeResult"/> by the free dimensions
     /// with the numbers in the range <paramref name="dimensionNumbersRange"/>.
     /// </summary>
+    /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
+    /// <typeparam name="T">The type of the aggregated value.</typeparam>
     /// <param name="cubeResult">
     /// The source instance of the <seealso cref="CubeResult{TIndex,T}"/>.
     /// </param>
@@ -65,7 +71,7 @@ public static class CubeResultExtensions
     /// by which to break down the <paramref name="cubeResult"/>.
     /// </param>
     /// <returns>
-    /// The new instance of the <see cref="CubeResult{TIndex, T}"/> broken down by
+    /// A collection of <see cref="CubeResult{TIndex, T}"/> instances, each broken down by
     /// the free dimensions with the numbers in the range <paramref name="dimensionNumbersRange"/>.
     /// </returns>
     /// <exception cref="ArgumentException">
@@ -84,6 +90,8 @@ public static class CubeResultExtensions
     /// Breaks down the <paramref name="cubeResult"/> by the free dimensions
     /// with the numbers <paramref name="dimensionNumbers"/>.
     /// </summary>
+    /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
+    /// <typeparam name="T">The type of the aggregated value.</typeparam>
     /// <param name="cubeResult">
     /// The source instance of the <seealso cref="CubeResult{TIndex,T}"/>.
     /// </param>
@@ -91,7 +99,7 @@ public static class CubeResultExtensions
     /// The numbers of the free dimensions by which to break down the <paramref name="cubeResult"/>.
     /// </param>
     /// <returns>
-    /// The new instance of the <see cref="CubeResult{TIndex, T}"/> broken down by
+    /// A collection of <see cref="CubeResult{TIndex, T}"/> instances, each broken down by
     /// the free dimensions with the numbers <paramref name="dimensionNumbers"/>.
     /// </returns>
     /// <exception cref="ArgumentException">
@@ -112,6 +120,8 @@ public static class CubeResultExtensions
     /// Gets the definition of the index in the bound dimension
     /// with the number <paramref name="dimensionNumber"/>.
     /// </summary>
+    /// <typeparam name="TIndex">The type of the dimension index.</typeparam>
+    /// <typeparam name="T">The type of the aggregated value.</typeparam>
     /// <param name="cubeResult">
     /// The source instance of the <seealso cref="CubeResult{TIndex,T}"/>.
     /// </param>

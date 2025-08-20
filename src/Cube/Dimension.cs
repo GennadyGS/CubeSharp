@@ -9,6 +9,15 @@ public class Dimension<TIndex>
     : DefinitionBase, IEnumerable<IndexDefinition<TIndex>>
     where TIndex : notnull
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Dimension{TIndex}"/> class.
+    /// </summary>
+    /// <param name="title">The title of the dimension.</param>
+    /// <param name="indexDefinitions">The collection of the top-level index definitions.</param>
+    /// <remarks>
+    /// The constructor builds internal maps for fast lookup and validates that if the default
+    /// (root) index is present it is the only root index defined.
+    /// </remarks>
     protected Dimension(
         string? title,
         IReadOnlyCollection<IndexDefinition<TIndex>> indexDefinitions)

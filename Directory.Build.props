@@ -10,7 +10,6 @@
     <NameSpacePrefix>GennadyGS</NameSpacePrefix>
     <AssemblyName>$(NameSpacePrefix).$(MSBuildProjectName)</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);CS1591;SA1612;SA1615;SA1618</NoWarn>
   </PropertyGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)/codeAnalysis/CodeAnalysis.targets"/>

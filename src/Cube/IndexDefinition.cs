@@ -36,9 +36,9 @@ public static class IndexDefinition
     /// definitions before parent on enumerating the dimension indexes.
     /// </summary>
     /// <typeparam name="T">The type of the index value.</typeparam>
+    /// <param name="children">The collection of the child index definitions.</param>
     /// <param name="value">The value of the index definition.</param>
     /// <param name="title">The title of the index definition (optional).</param>
-    /// <param name="children">The collection of the child index definitions.</param>
     /// <returns>The new instance of <seealso cref="IndexDefinition{T}"/>.</returns>
     /// <remarks>
     /// Child index definitions <paramref name="children"/> will appear before the parent

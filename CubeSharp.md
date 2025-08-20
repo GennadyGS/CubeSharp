@@ -100,13 +100,13 @@ var report = cube
     .Select(row => row
         .GetBoundDimensionsAndIndexes()
         .Select(dimensionAndIndex => KeyValuePair.Create(
-            dimensionAndIndex.dimension.Title,
-            (object)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
+            dimensionAndIndex.dimension.Title!,
+            (object?)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
         .Concat(row
             .BreakdownByDimensions(^1) // ^1 - build columns by last dimension
             .Select(column => KeyValuePair.Create(
-                column.GetBoundIndexDefinition(^1).Title,
-                (object)column.GetValue())))
+                column.GetBoundIndexDefinition(^1).Title!,
+                (object?)column.GetValue())))
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 ```
 For now it is enough to understand how requirements are reflected in this code, all details will be explained in following sections. 
@@ -315,7 +315,7 @@ DimensionDefinition.Create(
     order => order.CustomerId,
     title: "Customers",
     IndexDefinition.Create(
-        (string)default,
+        (string?)default,
         title: "Total",
         IndexDefinition.Create("A", "Customer A"),
         IndexDefinition.Create("B", "Customer B")));
@@ -369,10 +369,10 @@ Method `DimensionDefinition.CreateForDictionaryCollection(...)` is shortcut fixi
 
 ```csharp
 DimensionDefinition.CreateForDictionaryCollection(
-    dict => (string)dict["CustomerId"],
+    dict => (string?)dict["CustomerId"],
     title: "Customers",
     IndexDefinition.Create(
-        (string)default,
+        (string?)default,
         title: "Total",
         IndexDefinition.Create("A", "Customer A"),
         IndexDefinition.Create("B", "Customer B")));
@@ -386,7 +386,7 @@ DimensionDefinition.CreateForCollection(
     order => order.CustomerId,
     title: "Customers",
     IndexDefinition.Create(
-        (string)default,
+        (string?)default,
         title: "Total",
         IndexDefinition.Create("A", "Customer A"),
         IndexDefinition.Create("B", "Customer B")));
@@ -405,7 +405,7 @@ DimensionDefinition.CreateForCollectionWithMultiSelector(
     order => order.Tags,
     title: "Tags",
     IndexDefinition.Create(
-        (string)default,
+        (string?)default,
         title: "Total",
         IndexDefinition.Create("Bestseller", "Bestseller"),
         IndexDefinition.Create("Discount", "Discount")));
@@ -602,13 +602,13 @@ cube
     .Select(row => row
         .GetBoundDimensionsAndIndexes()
         .Select(dimensionAndIndex => KeyValuePair.Create(
-            dimensionAndIndex.dimension.Title,
-            (object)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
+            dimensionAndIndex.dimension.Title!,
+            (object?)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
         .Concat(row
             .BreakdownByDimensions(^1) // ^1 - first from end
             .Select(column => KeyValuePair.Create(
-                column.GetBoundIndexDefinition(^1).Title,
-                (object)column.GetValue())))
+                column.GetBoundIndexDefinition(^1).Title!,
+                (object?)column.GetValue())))
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 ```
 
@@ -638,14 +638,14 @@ cube
 We can generalize this code snippet to reusable method by extracting `cubeResult` and `columnDimensionNumber` parameters:
 
 ```csharp
-IDictionary<string, object> GetTableColumns<TIndex, T>(
-    CubeResult<TIndex, T> cubeResult,
-    Index columnDimensionNumber) =>
+IDictionary<string, object?> GetTableBodyColumns<TIndex, T>(
+    CubeResult<TIndex, T> cubeResult, Index columnDimensionNumber)
+    where TIndex : notnull =>
 cubeResult
     .BreakdownByDimensions(columnDimensionNumber)
     .Select(column => KeyValuePair.Create(
-        column.GetBoundIndexDefinition(^1).Title,
-        (object)column.GetValue()))
+        column.GetBoundIndexDefinition(^1).Title!,
+        (object?)column.GetValue()))
     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
 // Example of call
@@ -688,9 +688,9 @@ cube
     .Select(row => row
         .GetBoundDimensionsAndIndexes() // get collection of pairs of bound dimension and index
         .Select(dimensionAndIndex => KeyValuePair.Create( // create header column
-            dimensionAndIndex.dimension.Title, // use dimension title for key
-            (object)dimensionAndIndex.dimension[dimensionAndIndex.index].Title)) // use index title for value
-        .Concat(new[] { KeyValuePair.Create("Value", (object)row.GetValue()) })
+            dimensionAndIndex.dimension.Title!, // use dimension title for key
+            (object?)dimensionAndIndex.dimension[dimensionAndIndex.index].Title)) // use index title for value
+        .Concat(new[] { KeyValuePair.Create("Value", (object?)row.GetValue()) })
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 ```
 
@@ -708,19 +708,20 @@ We can similarly generalize code snippet above to reusable method by extracting 
 IEnumerable<IDictionary<string, object>> GetTable<TIndex, T>(
     CubeResult<TIndex, T> cubeResult,
     Range rowDimensions,
-    Func<CubeResult<TIndex, T>, IDictionary<string, object>> getHeaderColumns,
-    Func<CubeResult<TIndex, T>, IDictionary<string, object>> getBodyColumns) =>
+    Func<CubeResult<TIndex, T>, IDictionary<string, object?>> getHeaderColumns,
+    Func<CubeResult<TIndex, T>, IDictionary<string, object?>> getBodyColumns)
+    where TIndex : notnull =>
     from row in cubeResult.BreakdownByDimensions(rowDimensions)
     select getHeaderColumns(row)
         .Concat(getBodyColumns(row)) // get body columns
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-IDictionary<string, object> GetTableHeaderColumns<TIndex, T>(
-    CubeResult<TIndex, T> row) =>
+IDictionary<string, object?> GetTableHeaderColumns<TIndex, T>(CubeResult<TIndex, T> row)
+    where TIndex : notnull =>
     row.GetBoundDimensionsAndIndexes()
         .Select(dimensionAndIndex => KeyValuePair.Create(
-            dimensionAndIndex.dimension.Title,
-            (object)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
+            dimensionAndIndex.dimension.Title!,
+            (object?)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
 // Example of call
@@ -728,7 +729,7 @@ GetTable(
     cube,
     ..^1, // ..^1 - build rows by range of all dimensions except last
     GetTableHeaderColumns,
-    row => new Dictionary<string, object> { ["Value"] = (object)row.GetValue() });
+    row => new Dictionary<string, object?> { ["Value"] = (object)row.GetValue() });
 ```
 
 Now let's put everything together: call extracted method `GetTable(...)` using extracted method `GetTableColumns(...)` for generating body columns:
@@ -738,7 +739,7 @@ GetTable(
     cube,
     ..^1, // ..^1 - build rows by range of all dimensions except last
     GetTableHeaderColumns,
-    row => GetTableColumns(row, ^1)); // ^1 - build columns by last dimension
+    row => GetTableBodyColumns(row, ^1)); // ^1 - build columns by last dimension
 ```
 
 | Customers  | 2007 Year | 2008 Year | 2009 Year | Total |

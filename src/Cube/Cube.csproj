@@ -1,6 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageProjectUrl>https://github.com/GennadyGS/Cube</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GennadyGS/Cube</RepositoryUrl>
+    <PackageTags>TBD</PackageTags>
+    <Description>TBD</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,5 +18,10 @@
 
   <ItemGroup>
     <PackageReference Include="System.Linq.Async" Version="6.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Link="README.md" Pack="true" PackagePath="" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

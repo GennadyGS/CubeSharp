@@ -13,14 +13,14 @@
 
 # Introduction
 
-WizNG.Cube is a small library for building in-memory [data cubes](https://en.wikipedia.org/wiki/Data_cube).  
+Cube is a small library for building in-memory [data cubes](https://en.wikipedia.org/wiki/Data_cube).  
 
 # Motivation
 
 Imagine you need to build tabular report concerning multiple factors (or dimensions),involving data aggregations and calculations, using totals by one or mode dimensions. 
 If you use SQL for this purpose you have limited possibilities to refactor and test your code, which makes difficult to maintain it. 
 If you use native .NET capabilities, e.g. LINQ, you need to write a lot of ah-hoc data manipulations, like filtering, mapping and aggregation, which also makes code difficult to maintain.
-WizNG.Cube library allows you to systematize implementation approach to multi-factor (or multi-dimensional) reports by building the in memory data cube and then transforming it in required tabular representation.
+Cube library allows you to systematize implementation approach to multi-factor (or multi-dimensional) reports by building the in memory data cube and then transforming it in required tabular representation.
 
 # Getting started
 
@@ -58,7 +58,7 @@ Desired report may look like this:
 | Customer D | 0         | 0         | 60        | 60    |
 | Total      | 64        | 66        | 105       | 235   |
 
-In order to build such report with WizNG.Cube library, you need to write the following code:
+In order to build such report with Cube library, you need to write the following code:
 
 ```csharp
 // Aggregation definition: calculate sum of Quantity field

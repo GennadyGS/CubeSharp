@@ -265,7 +265,7 @@ public sealed class CubeResult<TIndex, T>
     /// The array of tuples, containing the bound dimension and
     /// the bound index, associated with this dimension.
     /// </returns>
-    public (Dimension<TIndex>, TIndex? index)[] GetBoundDimensionsAndIndexes() =>
+    public (Dimension<TIndex> dimension, TIndex? index)[] GetBoundDimensionsAndIndexes() =>
         BoundDimensionNumbersAndIndexes
             .Select(item => (AllDimensions[item.number], item.index))
             .ToArray();

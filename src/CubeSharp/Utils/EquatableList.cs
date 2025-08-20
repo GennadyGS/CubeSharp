@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Cube.Utils;
+namespace CubeSharp.Utils;
 
 internal sealed class EquatableList<T>
     : IReadOnlyList<T>, IEquatable<EquatableList<T>>

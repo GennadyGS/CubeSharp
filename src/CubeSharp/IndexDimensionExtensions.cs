@@ -1,6 +1,6 @@
-﻿using Cube.Utils;
+﻿using CubeSharp.Utils;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>
 /// Provides static methods for additional operations on the instances of

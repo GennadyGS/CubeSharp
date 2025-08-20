@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Globalization;
-using Cube;
 using CubeSharp.Tests.Data;
 using FluentAssertions;
 using Xunit;
@@ -21,7 +20,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public void BuildCube_ShouldGenerateCorrect1DCube()
     {
-        var cubeResult = TestSourceData.Records.BuildCube(
+        var cubeResult = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.A);
         var results =
@@ -46,7 +46,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public void BuildCube_ShouldGenerateCorrect1DCubeWithMultiSelector()
     {
-        var cubeResult = TestSourceData.Records.BuildCube(
+        var cubeResult = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.E);
         var results =
@@ -86,7 +87,8 @@ public sealed class CubeBuilderTests
                 },
             new { C = 0m, D = 0L });
 
-        var cubeResult = TestSourceData.Records.BuildCube(
+        var cubeResult = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             sumOfCAndSumOfD,
             TestDimensionDefinitions.A);
         var results =
@@ -123,7 +125,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public void BuildCube_ShouldGenerateCorrect2DCube()
     {
-        var cubeResult = TestSourceData.Records.BuildCube(
+        var cubeResult = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.B,
             TestDimensionDefinitions.A);
@@ -182,7 +185,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public void BuildCube_ShouldGenerateCorrect2DCubeWithMultiSelector()
     {
-        var cubeResult = TestSourceData.Records.BuildCube(
+        var cubeResult = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.E,
             TestDimensionDefinitions.A);
@@ -241,7 +245,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public void BuildCube_ShouldGenerateCorrect3DCube()
     {
-        var cubeResult = TestSourceData.Records.BuildCube(
+        var cubeResult = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.C,
             TestDimensionDefinitions.B,
@@ -316,11 +321,10 @@ public sealed class CubeBuilderTests
     [Fact]
     public async Task BuildCubeAsync_ShouldGenerateCorrect1DCube()
     {
-        var cubeResult = await TestSourceData.Records
-            .ToAsyncEnumerable()
-            .BuildCubeAsync(
-                TestAggregationDefinitions.SumOfD,
-                TestDimensionDefinitions.A);
+        var cubeResult = await CubeBuilder.BuildCubeAsync(
+            TestSourceData.Records.ToAsyncEnumerable(),
+            TestAggregationDefinitions.SumOfD,
+            TestDimensionDefinitions.A);
         var results =
             new
             {
@@ -343,7 +347,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public async Task BuildCubeAsync_ShouldGenerateCorrect1DCubeWithMultiSelector()
     {
-        var cubeResult = await TestSourceData.Records.ToAsyncEnumerable().BuildCubeAsync(
+        var cubeResult = await CubeBuilder.BuildCubeAsync(
+            TestSourceData.Records.ToAsyncEnumerable(),
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.E);
         var results =
@@ -383,7 +388,8 @@ public sealed class CubeBuilderTests
                 },
             new { C = 0m, D = 0L });
 
-        var cubeResult = await TestSourceData.Records.ToAsyncEnumerable().BuildCubeAsync(
+        var cubeResult = await CubeBuilder.BuildCubeAsync(
+            TestSourceData.Records.ToAsyncEnumerable(),
             sumOfCAndSumOfD,
             TestDimensionDefinitions.A);
         var results =
@@ -420,7 +426,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public async Task BuildCubeAsync_ShouldGenerateCorrect2DCube()
     {
-        var cubeResult = await TestSourceData.Records.ToAsyncEnumerable().BuildCubeAsync(
+        var cubeResult = await CubeBuilder.BuildCubeAsync(
+            TestSourceData.Records.ToAsyncEnumerable(),
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.B,
             TestDimensionDefinitions.A);
@@ -479,7 +486,8 @@ public sealed class CubeBuilderTests
     [Fact]
     public async Task BuildCubeAsync_ShouldGenerateCorrect2DCubeWithMultiSelector()
     {
-        var cubeResult = await TestSourceData.Records.ToAsyncEnumerable().BuildCubeAsync(
+        var cubeResult = await CubeBuilder.BuildCubeAsync(
+            TestSourceData.Records.ToAsyncEnumerable(),
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.E,
             TestDimensionDefinitions.A);
@@ -580,7 +588,8 @@ public sealed class CubeBuilderTests
             }
         }
 
-        var cubeResult = await TestSourceData.Records.ToAsyncEnumerable().BuildCubeAsync(
+        var cubeResult = await CubeBuilder.BuildCubeAsync(
+            TestSourceData.Records.ToAsyncEnumerable(),
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.C,
             TestDimensionDefinitions.B,

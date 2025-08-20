@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using Cube.Utils;
+using CubeSharp.Utils;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>Represents the cube dimension.</summary>
 /// <typeparam name="TIndex">The type of the dimension index.</typeparam>

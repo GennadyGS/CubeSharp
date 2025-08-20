@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Cube;
 using FluentAssertions;
 using Xunit;
 

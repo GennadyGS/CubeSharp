@@ -1,5 +1,5 @@
-﻿using Cube.Utils;
-using CubeSharp.Tests.Utils;
+﻿using CubeSharp.Tests.Utils;
+using CubeSharp.Utils;
 using FluentAssertions;
 using Xunit;
 

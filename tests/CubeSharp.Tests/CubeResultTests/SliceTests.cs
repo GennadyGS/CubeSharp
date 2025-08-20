@@ -1,5 +1,4 @@
-﻿using Cube;
-using CubeSharp.Tests.Data;
+﻿using CubeSharp.Tests.Data;
 using FluentAssertions;
 using Xunit;
 
@@ -9,7 +8,8 @@ public sealed class SliceTests
 {
     public SliceTests()
     {
-        Sut = TestSourceData.Records.BuildCube(
+        Sut = CubeBuilder.BuildCube(
+            TestSourceData.Records,
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.A,
             TestDimensionDefinitions.B);

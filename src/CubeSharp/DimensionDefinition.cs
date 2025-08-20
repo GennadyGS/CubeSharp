@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
-using Cube.Utils;
+using CubeSharp.Utils;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>
 /// Provides static method for creating the instances of

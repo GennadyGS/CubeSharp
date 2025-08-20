@@ -1,4 +1,4 @@
-﻿using Cube.Utils;
+﻿using CubeSharp.Utils;
 using FluentAssertions;
 using Xunit;
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Cube.Utils;
+namespace CubeSharp.Utils;
 
 internal sealed class DictionarySupportingNullKeys<TKey, TValue>
     : IReadOnlyDictionary<TKey?, TValue>

@@ -1,4 +1,4 @@
-﻿namespace Cube;
+﻿namespace CubeSharp;
 
 /// <summary>
 /// Provides static method for creating the instances of <seealso cref="IndexDefinition{T}"/>.

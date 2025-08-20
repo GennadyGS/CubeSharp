@@ -1,6 +1,6 @@
-﻿using Cube.Utils;
+﻿using CubeSharp.Utils;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>
 /// Represents result of the data cube generation.

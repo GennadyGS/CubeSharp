@@ -1,4 +1,4 @@
-﻿namespace Cube.Utils;
+﻿namespace CubeSharp.Utils;
 
 internal static class DictionaryExtensions
 {

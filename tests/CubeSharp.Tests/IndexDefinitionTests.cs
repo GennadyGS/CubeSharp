@@ -1,5 +1,4 @@
-﻿using Cube;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace CubeSharp.Tests;

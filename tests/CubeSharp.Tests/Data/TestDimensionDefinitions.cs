@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using Cube;
 
 namespace CubeSharp.Tests.Data;
 

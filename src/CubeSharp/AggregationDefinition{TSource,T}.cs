@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>Represents the aggregation definition.</summary>
 /// <typeparam name="TSource">

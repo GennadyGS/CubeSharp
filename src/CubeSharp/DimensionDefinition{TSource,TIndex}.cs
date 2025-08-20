@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>Represents the cube dimension definition.</summary>
 /// <typeparam name="TSource">

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Cube.Utils;
+namespace CubeSharp.Utils;
 
 internal static class ExpressionExtensions
 {

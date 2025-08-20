@@ -1,6 +1,4 @@
-﻿using Cube;
-
-namespace CubeSharp.Tests.Data;
+﻿namespace CubeSharp.Tests.Data;
 
 internal static class TestAggregationDefinitions
 {

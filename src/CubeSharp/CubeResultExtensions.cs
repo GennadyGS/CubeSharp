@@ -1,6 +1,6 @@
-﻿using Cube.Utils;
+﻿using CubeSharp.Utils;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>
 /// Provides extension methods for <see cref="CubeResult{TIndex,T}"/>.

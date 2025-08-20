@@ -1,4 +1,4 @@
-﻿namespace Cube;
+﻿namespace CubeSharp;
 
 /// <summary>The base class of the definition.</summary>
 /// <remarks>Contains common functionality of the all definitions.</remarks>

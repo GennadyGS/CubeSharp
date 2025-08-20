@@ -1,6 +1,6 @@
-﻿using Cube.Utils;
+﻿using CubeSharp.Utils;
 
-namespace Cube;
+namespace CubeSharp;
 
 /// <summary>Represents the cube dimension index definition.</summary>
 /// <typeparam name="T">The type of the index value.</typeparam>

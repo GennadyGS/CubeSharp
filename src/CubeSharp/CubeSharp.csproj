@@ -3,8 +3,8 @@
     <IsPackable>true</IsPackable>
     <PackageProjectUrl>https://github.com/GennadyGS/Cube</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GennadyGS/Cube</RepositoryUrl>
-    <PackageTags>TBD</PackageTags>
-    <Description>TBD</Description>
+    <PackageTags>data-cube;olap;multidimensional;analytics;aggregation;hierarchies;linq;async;.net</PackageTags>
+    <Description>CubeSharp is a .NET library for constructing and querying in-memory multidimensional data cubes, offering hierarchical navigation, flexible aggregations, and async LINQ-based querying.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

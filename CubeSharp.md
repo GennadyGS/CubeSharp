@@ -1,30 +1,31 @@
 - [Introduction](#introduction)
 - [Motivation](#motivation)
-- [Getting started](#getting-started)
-- [Building the cubes.](#building-the-cubes)
-  - [Aggregation definitions.](#aggregation-definitions)
-  - [Dimension definitions.](#dimension-definitions)
+- [Getting Started](#getting-started)
+- [Building Cubes](#building-cubes)
+  - [Aggregation Definitions](#aggregation-definitions)
+  - [Dimension Definitions](#dimension-definitions)
     - [Multi-selection](#multi-selection)
-- [Querying the cubes.](#querying-the-cubes)
-  - [Querying the single cube cells.](#querying-the-single-cube-cells)
-  - [Slicing the cubes.](#slicing-the-cubes)
-  - [Breakdown operation.](#breakdown-operation)
-  - [Generic cube operations.](#generic-cube-operations)
+- [Querying Cubes](#querying-cubes)
+  - [Querying Single Cube Cells](#querying-single-cube-cells)
+  - [Slicing Cubes](#slicing-cubes)
+  - [Breakdown Operations](#breakdown-operations)
+  - [Generic Cube Operations](#generic-cube-operations)
 
 # Introduction
 
-CubeSharp is a small library for building in-memory [data cubes](https://en.wikipedia.org/wiki/Data_cube).  
+CubeSharp is a lightweight library for building in-memory [data cubes](https://en.wikipedia.org/wiki/Data_cube).
 
 # Motivation
 
-Imagine you need to build tabular report concerning multiple factors (or dimensions),involving data aggregations and calculations, using totals by one or mode dimensions. 
-If you use SQL for this purpose you have limited possibilities to refactor and test your code, which makes difficult to maintain it. 
-If you use native .NET capabilities, e.g. LINQ, you need to write a lot of ah-hoc data manipulations, like filtering, mapping and aggregation, which also makes code difficult to maintain.
-CubeSharp library allows you to systematize implementation approach to multi-factor (or multi-dimensional) reports by building the in memory data cube and then transforming it in required tabular representation.
+Imagine you need to build a tabular report involving multiple factors (or dimensions), data aggregations, calculations, and totals across one or more dimensions.
 
-# Getting started
+If you use SQL for this purpose, you have limited possibilities for refactoring and testing your code, making it difficult to maintain. If you use native .NET capabilities like LINQ, you need to write many ad-hoc data manipulations such as filtering, mapping, and aggregation, which also makes code difficult to maintain.
 
-Imagine, you have collection of data in the following form:
+The CubeSharp library allows you to systematize your implementation approach to multi-factor (or multi-dimensional) reports by building in-memory data cubes and then transforming them into the required tabular representation.
+
+# Getting Started
+
+Imagine you have a collection of data in the following form:
 
 ```csharp
 var orders = new [] {
@@ -46,9 +47,9 @@ var orders = new [] {
 };
 ```
 
-You need to build report with customer IDs as rows versus order years as columns and to calculate total quantity for each cell. Also you have fixed list of rows and columns to display including totals. 
+You need to build a report with customer IDs as rows and order years as columns, calculating the total quantity for each cell. You also have a fixed list of rows and columns to display, including totals.
 
-Desired report may look like this:
+The desired report may look like this:
 
 | Customers  | 2007 Year | 2008 Year | 2009 Year | Total |
 |------------|-----------|-----------|-----------|-------|
@@ -58,7 +59,7 @@ Desired report may look like this:
 | Customer D | 0         | 0         | 60        | 60    |
 | Total      | 64        | 66        | 105       | 235   |
 
-In order to build such report with CubeSharp library, you need to write the following code:
+To build such a report with the CubeSharp library, you need to write the following code:
 
 ```csharp
 // Aggregation definition: calculate sum of Quantity field
@@ -68,7 +69,7 @@ var aggregationDefinition = AggregationDefinition.CreateForCollection(
     (a, b) => a + b,
     seedValue: 0);
 
-// Rows dimension: use field CustomerId, specify list of values with titles to display, 
+// Rows dimension: use CustomerId field, specify list of values with titles to display, 
 // include total row at the bottom
 var customerIdDimension = DimensionDefinition.CreateForCollection(
     orders,
@@ -80,8 +81,8 @@ var customerIdDimension = DimensionDefinition.CreateForCollection(
     IndexDefinition.Create("D", "Customer D"))
         .WithTrailingDefaultIndex("Total");
 
-// Columns dimension: use Year property of field CustomerId, 
-// specify list of values with titles to display, include total row at the bottom
+// Columns dimension: use Year property of OrderDate field, 
+// specify list of values with titles to display, include total column on the right
 var yearDimension = DimensionDefinition.CreateForCollection(
     orders,
     order => order.OrderDate.Year.ToString(),
@@ -91,30 +92,30 @@ var yearDimension = DimensionDefinition.CreateForCollection(
     IndexDefinition.Create("2009", "2009 Year"))
         .WithTrailingDefaultIndex("Total");
 
-// Build cube from source collection using aggregation and list of dimension definitions.
+// Build cube from source collection using aggregation and dimension definitions
 var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDimension);
 
-// Transform cube to table in form of collection of dictionaries.
+// Transform cube to table in the form of a collection of dictionaries
 var report = cube
-    .BreakdownByDimensions(..^1) // ..^1 - build rows by range of all dimensions except last
+    .BreakdownByDimensions(..^1) // ..^1 - build rows by all dimensions except the last
     .Select(row => row
         .GetBoundDimensionsAndIndexes()
         .Select(dimensionAndIndex => KeyValuePair.Create(
             dimensionAndIndex.dimension.Title!,
             (object?)dimensionAndIndex.dimension[dimensionAndIndex.index].Title))
         .Concat(row
-            .BreakdownByDimensions(^1) // ^1 - build columns by last dimension
+            .BreakdownByDimensions(^1) // ^1 - build columns by the last dimension
             .Select(column => KeyValuePair.Create(
                 column.GetBoundIndexDefinition(^1).Title!,
                 (object?)column.GetValue())))
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 ```
-For now it is enough to understand how requirements are reflected in this code, all details will be explained in following sections. 
-Result will be collection of dictionaries, which in table form equivalent to desired report.
 
-# Building the cubes.
+For now, it's sufficient to understand how requirements are reflected in this code. All details will be explained in the following sections. The result will be a collection of dictionaries, which in tabular form is equivalent to the desired report.
 
-In order to build the cube you need to use generic extension method `BuildCube(...)` for any collection, additionally providing aggregation definition and any number of dimension definitions (including zero) in form of [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params).
+# Building Cubes
+
+To build a cube, you need to use the generic extension method `BuildCube(...)` on any collection, providing an aggregation definition and any number of dimension definitions (including zero) as a [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params).
 
 ```csharp
 orders.BuildCube(aggregationDefinition, customerIdDimension);
@@ -124,11 +125,12 @@ orders.BuildCube(aggregationDefinition, yearDimension, customerIdDimension);
 orders.BuildCube(aggregationDefinition, yearDimension, customerIdDimension, productDimension);
 ```
 
-`BuildCube<TSource, TIndex, T>(...)` is generic method with following type arguments:
-- `TSource` - the type of source collection's item;
-- `TIndex` - the type of dimension index, in previous example type of column and row indexes: `order.CustomerId` and `order.OrderDate.Year.ToString()`. The type should be the same for all dimensions. It means that if types of data for rows and columns are different, you need to bring them to the common type - in out case `string`. That is why `.ToString()` is used for years;
-- `T` - the type of aggregation result, that is basically type of cube cell. In our example it is type of `order.Quantity`, which is inferred as integer.
-Usually type arguments are inferred automatically, but in case when it is impossible, e.g. in absence of dimensions, it is required to specify them explicitly:
+`BuildCube<TSource, TIndex, T>(...)` is a generic method with the following type arguments:
+- `TSource` - the type of the source collection's item
+- `TIndex` - the type of dimension index. In the previous example, this is the type of column and row indexes: `order.CustomerId` and `order.OrderDate.Year.ToString()`. The type should be the same for all dimensions. This means that if the data types for rows and columns are different, you need to bring them to a common type - in our case, `string`. That's why `.ToString()` is used for years
+- `T` - the type of aggregation result, which is basically the type of cube cell. In our example, it's the type of `order.Quantity`, which is inferred as decimal
+
+Usually, type arguments are inferred automatically, but when this is impossible (e.g., in the absence of dimensions), you need to specify them explicitly:
 
 ```csharp
 Enumerable.Range(1, 10)
@@ -136,13 +138,13 @@ Enumerable.Range(1, 10)
         AggregationDefinition.Create((int i) => i, (a, b) => a + b, 0));
 ```
 
-Order of dimension definition argument is arbitrary. Method `BuildCube(...)` treats all dimension definitions equally. However notice that order of dimensions in result cube will be the same as order of dimension definition arguments.
-Method `BuildCube(...)` returns data cube in form of `CubeResult` instance, see [Querying the cubes](#querying-the-cubes) section for details.
+The order of dimension definition arguments is arbitrary. The `BuildCube(...)` method treats all dimension definitions equally. However, note that the order of dimensions in the resulting cube will be the same as the order of dimension definition arguments.
 
-## Aggregation definitions.
+The `BuildCube(...)` method returns a data cube in the form of a `CubeResult` instance. See the [Querying Cubes](#querying-cubes) section for details.
 
-Aggregation (alternatively called measure) specifies how to calculate cube cells. 
-Aggregation definitions can be created with static method `AggregationDefinition.Create(...)` (or its modifications) in following way:
+## Aggregation Definitions
+
+Aggregation (alternatively called measure) specifies how to calculate cube cells. Aggregation definitions can be created with the static method `AggregationDefinition.Create(...)` (or its variations) in the following way:
 
 ```csharp
 AggregationDefinition.Create(
@@ -151,16 +153,16 @@ AggregationDefinition.Create(
     seedValue: 0);
 ```
 
-Method `AggregationDefinition.Create<TSource, T>(...)` is generic with following type arguments:
-- `TSource` - the type of source source collection's item;
-- `T` - the type of aggregation result, that is basically type of cube cell; in our example it is type of `order.Quantity`, which is inferred as integer.
+The method `AggregationDefinition.Create<TSource, T>(...)` is generic with the following type arguments:
+- `TSource` - the type of the source collection's item
+- `T` - the type of aggregation result, which is basically the type of cube cell. In our example, it's the type of `order.Quantity`, which is inferred as decimal
 
-Method `AggregationDefinition.Create(...)` has the following parameters:
-- `valueSelector` - lambda function (more precisely expression), specifying basically what field of source collection will be used for aggregation, in our example `order => order.Quantity`; in cause your collection directly contains values of interest, specify just `x => x`; expression can also include multiple fields, e.g. `order => order.Quantity * order.Amount`;
-- `aggregationFunction` - lambda function with signature `Func<T, T, T>`, specifying how data should be aggregated, e.g. sum, min, max, etc, for our case it is `(a, b) => a + b`;
-- `seedValue` - specifies seed value for aggregation, it also will define value for cells, which does not have matching data.
+The method `AggregationDefinition.Create(...)` has the following parameters:
+- `valueSelector` - a lambda function (more precisely, an expression) that specifies what field of the source collection will be used for aggregation. In our example, `order => order.Quantity`. If your collection directly contains values of interest, specify just `x => x`. The expression can also include multiple fields, e.g., `order => order.Quantity * order.Amount`
+- `aggregationFunction` - a lambda function with signature `Func<T, T, T>` that specifies how data should be aggregated (e.g., sum, min, max). For our case, it's `(a, b) => a + b`
+- `seedValue` - specifies the seed value for aggregation. It also defines the value for cells that don't have matching data
 
-Last two arguments corresponds to similar arguments of [LINQ Aggregate method](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.aggregate?view=netcore-3.1).
+The last two arguments correspond to similar arguments of the [LINQ Aggregate method](https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.aggregate?view=netcore-3.1).
 
 ```csharp
 // Take sum
@@ -178,12 +180,12 @@ AggregationDefinition.Create((int i) => 1, (a, b) => a + b, 0);
 
 // Collect items
 AggregationDefinition.Create(
-    (int i) => new[] { i },
+    (int i)  => new[] { i },
     (a, b) => a.Concat(b).ToArray(),
     Array.Empty<int>());
 ```
 
-In case you need co calculate multiple values for each cell you can create composite type and use it as type of aggregation result `T`, for instance:
+If you need to calculate multiple values for each cell, you can create a composite type and use it as the aggregation result type `T`, for instance:
 
 ```csharp
 // Create structure for storing two aggregation values: count and sum
@@ -207,16 +209,16 @@ struct CountAndSum
         new CountAndSum(left.Count + right.Count, left.Sum + right.Sum);
 }
 
-// Create aggregation definition for calculating count amd sum
+// Create aggregation definition for calculating count and sum
 AggregationDefinition.Create(
     (int i) => new CountAndSum(1, i),
     CountAndSum.Combine,
     CountAndSum.Zero);
 ```
 
-There are several modifications of `AggregationDefinition.Create(...)` method.
+There are several variations of the `AggregationDefinition.Create(...)` method.
 
-Method `AggregationDefinition.CreateForDictionaryCollection(...)` is shortcut fixing type of collection elements to `IDictionary<string, object>`, which frees from specifying this type argument explicitly.
+The method `AggregationDefinition.CreateForDictionaryCollection(...)` is a shortcut that fixes the type of collection elements to `IDictionary<string, object>`, which frees you from specifying this type argument explicitly.
 
 ```csharp
 // Take sum of field Quantity
@@ -224,7 +226,7 @@ AggregationDefinition.CreateForDictionaryCollection(
     dict => (decimal)dict["Quantity"], (a, b) => a + b, 0);
 ```
 
-Method `AggregationDefinition.CreateForCollection(...)` takes collection as additional argument, which is used only for type inference. It can be used also for anonymous types, as we have in example.
+The method `AggregationDefinition.CreateForCollection(...)` takes a collection as an additional argument, which is used only for type inference. It can also be used for anonymous types, as we have in the example.
 
 ```csharp
 // Take sum of field Quantity
@@ -235,10 +237,9 @@ AggregationDefinition.CreateForCollection(
     0);
 ```
 
-## Dimension definitions.
+## Dimension Definitions
 
-Dimension definition basically specify which field of source collection to use and what values of this field we are interested in.
-Dimension definition can be created with static method `DimensionDefinition.Create(...)` (or its modifications) in following way:
+Dimension definitions specify which field of the source collection to use and what values of this field we are interested in. Dimension definitions can be created with the static method `DimensionDefinition.Create(...)` (or its variations) in the following way:
 
 ```csharp
 DimensionDefinition.Create(
@@ -249,12 +250,12 @@ DimensionDefinition.Create(
     IndexDefinition.Create("C", "Customer C"));
 ```
 
-Method `DimensionDefinition.Create<TSource, TIndex>(...)` is generic with following type arguments:
-- `TSource` - the type of source source collection's item;
-- `TIndex` - the type of index, that is basically type of field, specified in `indexSelector` parameter; in our example it is the type of `order.CustomerId`, which is inferred as string.
+The method `DimensionDefinition.Create<TSource, TIndex>(...)` is generic with the following type arguments:
+- `TSource` - the type of the source collection's item
+- `TIndex` - the type of index, which is basically the type of field specified in the `indexSelector` parameter. In our example, it's the type of `order.CustomerId`, which is inferred as string
 
-Method `DimensionDefinition.Create(...)` has the following parameters:
-- `indexSelector` - lambda function (more precisely expression), basically specifying which field of source collection will be used as index, in our example `order => order.CustomerId`; more generally, `indexSelector` calculates index value on base of arbitrary expression:
+The method `DimensionDefinition.Create(...)` has the following parameters:
+- `indexSelector` - a lambda function (more precisely, an expression) that specifies which field of the source collection will be used as index. In our example, `order => order.CustomerId`. More generally, `indexSelector` calculates index values based on arbitrary expressions:
 
 ```csharp
 DimensionDefinition.Create(
@@ -264,18 +265,18 @@ DimensionDefinition.Create(
     IndexDefinition.Create("nonLeap", "Non-leap years"));
 ```
 
-- `title` - the title of dimension, which can be used for data representation in tabular form;
-- `indexDefinitions` - [variable size parameter](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params) for specifying collection of index definitions.
+- `title` - the title of the dimension, which can be used for data representation in tabular form
+- `indexDefinitions` - a [variable size parameter](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params) for specifying a collection of index definitions
 
-Index definitions are created with static method `IndexDefinition.Create(...)` in following way: 
+Index definitions are created with the static method `IndexDefinition.Create(...)` in the following way:
 
 ```csharp
 IndexDefinition.Create("A", "Customer A");
 ```
 
-Index values should be unique in scope of dimension.
+Index values should be unique within the scope of a dimension.
 
-Indexes can be organized in hierarchy, where parent index corresponds to subtotal value of its children. Child indexes can be specified as additional [variable size parameter](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params) of `IndexDefinition.Create(...)` method:
+Indexes can be organized in a hierarchy, where a parent index corresponds to a subtotal value of its children. Child indexes can be specified as an additional [variable size parameter](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params) of the `IndexDefinition.Create(...)` method:
 
 ```csharp
 IndexDefinition.Create(
@@ -285,9 +286,9 @@ IndexDefinition.Create(
     IndexDefinition.Create("A2", "Product A2"));
 ```
 
-Dimension definition implements [IEnumerable<>](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1?view=netcore-3.1) interface of `IndexDefinition<TIndex>`, which allows to traverse incorporated index definitions in specified order. It is useful for building table representations of cubes.
- 
- For child indexes they are usually follow after the parent index as in previous example. However parent index can be placed after the children with overload of `IndexDefinition.Create(...)` method with reversed order of arguments:
+Dimension definitions implement the [IEnumerable<>](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1?view=netcore-3.1) interface of `IndexDefinition<TIndex>`, which allows you to traverse incorporated index definitions in the specified order. This is useful for building table representations of cubes.
+
+For child indexes, they usually follow after the parent index as in the previous example. However, the parent index can be placed after the children with an overload of the `IndexDefinition.Create(...)` method with reversed order of arguments:
 
 ```csharp
 // Order of indexes:
@@ -303,14 +304,14 @@ IndexDefinition.Create(
     title: "Product category A");
 ```
 
-Value `default` (which is the same as `null` for reference and nullable types) of index is reserved for so-called _Default index_ which contains total value over the whole dimension and which usually represent total row or column in tabular representation.
+The `default` value (which is the same as `null` for reference and nullable types) of index is reserved for the so-called _Default index_, which contains the total value over the entire dimension and usually represents the total row or column in tabular representation.
 
-> **_NOTE:_**  In case `default` value is conflicting with usual index value (e.g. `0` value for `integer` type, you can consider converting index type to nullable (`int?`) or map `default` value to some other value in `indexSelector` lambda function.
+> **_NOTE:_** If the `default` value conflicts with a usual index value (e.g., `0` value for `integer` type), you can consider converting the index type to nullable (`int?`) or mapping the `default` value to some other value in the `indexSelector` lambda function.
 
-_Default index_ always must be the only root index of dimension and can have other indexes as children:
+The _Default index_ must always be the only root index of a dimension and can have other indexes as children:
 
 ```csharp
-/// Correct
+// Correct
 DimensionDefinition.Create(
     order => order.CustomerId,
     title: "Customers",
@@ -329,7 +330,7 @@ DimensionDefinition.Create(
     IndexDefinition.Create("B", "Customer B"));
 ```
 
-There are shortcuts for creating default index in existing dimension in form of `DimensionDefinition`'s extension methods `.WithLeadingDefaultIndex(...)` and `.WithTrailingDefaultIndex(...)`, which create new instance of `DimensionDefinition` with default index and nest all existing indexes as its children:
+There are shortcuts for creating a default index in an existing dimension in the form of `DimensionDefinition`'s extension methods `.WithLeadingDefaultIndex(...)` and `.WithTrailingDefaultIndex(...)`, which create a new instance of `DimensionDefinition` with a default index and nest all existing indexes as its children:
 
 ```csharp
 // Order of indexes:
@@ -355,7 +356,7 @@ DimensionDefinition.Create(
         .WithTrailingDefaultIndex("Total");
 ```
 
-Sometimes it is useful to have so-called `Default dimensions`, which are just dimensions with the only default index. It is degenerate form of dimension which can be used for instance as placeholder to keep constant number of dimensions across the code in cases where less number of dimensions is required. Since `Default dimensions` does not have actual index values, parameter `indexSelector` (lambda expression) is redundant. There is shortcut method `DimensionDefinition.CreateDefault(...)` for creating default dimensions:
+Sometimes it's useful to have so-called _Default dimensions_, which are dimensions with only the default index. This is a degenerate form of dimension that can be used, for instance, as a placeholder to keep a constant number of dimensions across the code when fewer dimensions are required. Since _Default dimensions_ don't have actual index values, the `indexSelector` parameter (lambda expression) is redundant. There's a shortcut method `DimensionDefinition.CreateDefault(...)` for creating default dimensions:
 
 ```csharp
 DimensionDefinition.CreateDefault<string, string>(
@@ -363,9 +364,9 @@ DimensionDefinition.CreateDefault<string, string>(
     indexTitle: "All customers");
 ```
 
-There are several modifications of `DimensionDefinition.Create(...)` method.
+There are several variations of the `DimensionDefinition.Create(...)` method.
 
-Method `DimensionDefinition.CreateForDictionaryCollection(...)` is shortcut fixing type of collection elements to `IDictionary<string, object>`, which frees from specifying this type argument explicitly:
+The method `DimensionDefinition.CreateForDictionaryCollection(...)` is a shortcut that fixes the type of collection elements to `IDictionary<string, object>`, which frees you from specifying this type argument explicitly:
 
 ```csharp
 DimensionDefinition.CreateForDictionaryCollection(
@@ -378,7 +379,7 @@ DimensionDefinition.CreateForDictionaryCollection(
         IndexDefinition.Create("B", "Customer B")));
 ```
 
-Method `DimensionDefinition.CreateForCollection(...)` takes collection as additional argument, which is used only for type inference. It can be used also for anonymous types, as we have in example:
+The method `DimensionDefinition.CreateForCollection(...)` takes a collection as an additional argument, which is used only for type inference. It can also be used for anonymous types, as we have in the example:
 
 ```csharp
 DimensionDefinition.CreateForCollection(
@@ -394,9 +395,8 @@ DimensionDefinition.CreateForCollection(
 
 ### Multi-selection
 
-Sometimes target entity has collection of attributes (common example is informational tags) or connected to other entity with one-to-many or many-to-many relation.
-For such cases there is method `DimensionDefinition.CreateWithMultiSelector(...)`, which takes index selector selecting multiple index values in the form of `Func<TSource, IEnumerable<TIndex>>`.
-There are also modifications of this method similar to described above: `CreateForDictionaryCollectionWithMultiSelector(..)` and `CreateForCollectionWithMultiSelector(...)`. 
+Sometimes a target entity has a collection of attributes (a common example is informational tags) or is connected to another entity with one-to-many or many-to-many relations. For such cases, there's the method `DimensionDefinition.CreateWithMultiSelector(...)`, which takes an index selector that selects multiple index values in the form of `Func<TSource, IEnumerable<TIndex>>`. There are also variations of this method similar to those described above: `CreateForDictionaryCollectionWithMultiSelector(..)` and `CreateForCollectionWithMultiSelector(...)`.
+
 For example:
 
 ```csharp
@@ -411,11 +411,11 @@ DimensionDefinition.CreateForCollectionWithMultiSelector(
         IndexDefinition.Create("Discount", "Discount")));
 ```
 
-# Querying the cubes.
+# Querying Cubes
 
-## Querying the single cube cells.
+## Querying Single Cube Cells
 
-The basic operation for querying the cubes is method `GetValue(...)` of `CubeResult` class. It returns aggregated data for specified cube cell. This method takes any number of index values in form of [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params) each corresponding to cube's dimension in order of cube's dimensions specified in `BuildCube(...)` method.
+The basic operation for querying cubes is the `GetValue(...)` method of the `CubeResult` class. It returns aggregated data for a specified cube cell. This method takes any number of index values as a [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params), each corresponding to the cube's dimensions in the order specified in the `BuildCube(...)` method.
 
 ```csharp
 var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDimension);
@@ -424,7 +424,7 @@ var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDime
 cube.GetValue("A", "2007");
 ```
 
-In order to get total by some dimension you need to specify `default` (which is the same as `null` for reference and nullable types) in corresponding position.
+To get the total by some dimension, you need to specify `default` (which is the same as `null` for reference and nullable types) in the corresponding position.
 
 ```csharp
 // Get aggregated value for all customers and year 2007
@@ -437,7 +437,7 @@ cube.GetValue("A", default);
 cube.GetValue(default, default);
 ```
 
-As shorthand you can also bypass trailing `default` index values:
+As a shorthand, you can also omit trailing `default` index values:
 
 ```csharp
 // The same as cube.GetValue("A", default)
@@ -447,9 +447,9 @@ cube.GetValue("A");
 cube.GetValue();
 ```
 
-> **_NOTE:_**  Bypassing trailing default indexes allows you to write generic code which does not depend on actual number of dimensions, for instance `cube.GetValue()` gets total value for any cube, `cube.GetValue(index)` gets specific value by index in first dimension provided only that cube has at least one dimension. See more details in section [Generic cube operations](#generic-cube-operations).
+> **_NOTE:_** Omitting trailing default indexes allows you to write generic code that doesn't depend on the actual number of dimensions. For instance, `cube.GetValue()` gets the total value for any cube, `cube.GetValue(index)` gets a specific value by index in the first dimension, provided that the cube has at least one dimension. See more details in the section [Generic Cube Operations](#generic-cube-operations).
 
-Method `GetValue(...)` always return the result, unless the number or specified parameters is bigger then number of cube's dimensions which can be retrieved by property `CubeResult.FreeDimensionCount`. In case when one or more indexes are not included in Dimensions' index definitions, result will be the `seedValue` specified in `Aggregation definition`.
+The `GetValue(...)` method always returns a result, unless the number of specified parameters is greater than the number of cube's dimensions, which can be retrieved by the property `CubeResult.FreeDimensionCount`. When one or more indexes are not included in the dimension's index definitions, the result will be the `seedValue` specified in the aggregation definition.
 
 ```csharp
 // Returns 0, since customer id "Z" is not specified in customerId dimension
@@ -461,10 +461,9 @@ cube.GetValue("Z", "2007"); // 0
 cube.GetValue("A", "1999"); // 0
 ```
 
-## Slicing the cubes.
+## Slicing Cubes
 
-_Slice_ operation intuitively can be considered as pinning the indexes for some dimensions.
-Compare different ways to achieve the same result:
+The _slice_ operation can be intuitively considered as pinning the indexes for some dimensions. Compare different ways to achieve the same result:
 
 ```csharp
 // Get aggregated value for customer "A" and year 2007
@@ -483,12 +482,11 @@ slice.GetValue("2007");
 slice.GetValue("2008");
 ```
 
-In these examples we apply _slice_ operation with use index operator `[]`.
+In these examples, we apply the _slice_ operation using the index operator `[]`.
 
-More formally, _slice_ is basically the operation of extracting the _(n-k)_-dimension cube from the _n_-dimension cube by picking the values for _k_ of dimensions (_k = 1_ in most usual case).
+More formally, _slice_ is the operation of extracting an _(n-k)_-dimensional cube from an _n_-dimensional cube by picking values for _k_ dimensions (_k = 1_ in the most usual case).
 
-Slice operation can be applied with indexing operator `[]` of class `CubeResult` (as in examples above) or more general `Slice(...)` method. This method allows to slice by multiple dimensions in arbitrary order, whereas indexing operator `[]` allows to slice only by the first free dimension.
-Dimension number to slice by can be specified as value of type [Index](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/ranges-indexes#language-support-for-indices-and-ranges), which is convertible to _int_ type.
+The slice operation can be applied with the indexing operator `[]` of the `CubeResult` class (as in examples above) or the more general `Slice(...)` method. This method allows slicing by multiple dimensions in arbitrary order, whereas the indexing operator `[]` only allows slicing by the first free dimension. The dimension number to slice by can be specified as a value of type [Index](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/ranges-indexes#language-support-for-indices-and-ranges), which is convertible to _int_ type.
 
 ```csharp
 var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDimension);
@@ -503,7 +501,7 @@ cube.Slice(1, "2007");
 cube.Slice(^1, "2007");
 ```
 
-In order to slice by multiple dimensions at once you can use overloads of `Slice(...)` method, which take multiple indexes or multiple pairs or dimension numbers and indexes in form of [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params).
+To slice by multiple dimensions at once, you can use overloads of the `Slice(...)` method, which take multiple indexes or multiple pairs of dimension numbers and indexes as a [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params).
 
 ```csharp
 // Returns the cube slice by customer ID "A" and year 2007
@@ -514,7 +512,7 @@ cube.Slice((0, "A"), (1, "2007"));
 cube.Slice((1, "2007"), (0, "A"));
 ```
 
-Applied indexes and corresponding _bound_ dimensions are stored in result of _slice_ operation and can be retrieved as collection of pairs with method `GetBoundDimensionsAndIndexes()` or or separately by methods `GetBoundDimension(...)` and `GetBoundIndex(...)` by number or _bound_ dimension.
+Applied indexes and corresponding _bound_ dimensions are stored in the result of the _slice_ operation and can be retrieved as a collection of pairs with the method `GetBoundDimensionsAndIndexes()` or separately by methods `GetBoundDimension(...)` and `GetBoundIndex(...)` by the number of the _bound_ dimension.
 
 ```csharp
 var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDimension);
@@ -523,7 +521,7 @@ var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDime
 var sliceByCustomerIdA = cube["A"];
 sliceByCustomerIdA.GetBoundDimensionsAndIndexes(); // new[] { (customerIdDimension, "A") }
 sliceByCustomerIdA.GetBoundDimension(0); // customerIdDimension
-sliceByCustomerIdA.GetBoundIndex(0); // "a"
+sliceByCustomerIdA.GetBoundIndex(0); // "A"
 
 // Cube slice by year 2007, where 1 means second dimension from beginning
 var sliceByYear2007 = cube.Slice(1, "2007");
@@ -544,7 +542,7 @@ sliceByYear2007AndCustomerIdA.GetBoundDimension(0); // yearDimension
 sliceByYear2007AndCustomerIdA.GetBoundDimension(1); // customerIdDimension
 ```
 
-Notice that result of `Slice(...)` method is cube with less number of free dimensions and dimension numbers possibly shifted:
+Notice that the result of the `Slice(...)` method is a cube with fewer free dimensions and possibly shifted dimension numbers:
 
 ```csharp
 // Cube slice by customer ID "A", the same as cube["A"]
@@ -554,13 +552,13 @@ cube.Slice(0, "A");
 sliceByCustomerIdA.Slice(0, "2007");
 ```
 
-## Breakdown operation.
+## Breakdown Operations
 
-_Breakdown_ operation allows to create collection of slices by all indexes of one or many dimensions. 
+The _breakdown_ operation allows you to create a collection of slices by all indexes of one or many dimensions.
 
-Returning back to starting example, remember that we need to build report with customer IDs as rows. Since every row of report corresponds to cube slice by specific customer ID, we need to have collection of cube slices by all customer IDs. Since we already defined all customer IDs of interest in dimension definition, we have an option to enumerate them. Breakdown operation is just combination of enumerating dimension indexes and slicing cube by each of them. 
+Returning to the starting example, remember that we need to build a report with customer IDs as rows. Since every row of the report corresponds to a cube slice by a specific customer ID, we need to have a collection of cube slices by all customer IDs. Since we already defined all customer IDs of interest in the dimension definition, we have an option to enumerate them. The breakdown operation is just a combination of enumerating dimension indexes and slicing the cube by each of them.
 
-_Breakdown_ operation is implemented in `BreakdownByDimensions(...)` extension methods of `CubeResult` class. These methods take one or many free dimension numbers in form of [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params). There is also overload taking range of dimension numbers as [Range](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/ranges) instance. As result `BreakdownByDimensions(...)` methods return collection of cube slices in form of instances of `CubeResult` class one per each index definition including totals. More generally, when many dimensions are specified result will be collection of cube slices corresponding to all combinations of index definitions of specified dimensions.
+The _breakdown_ operation is implemented in `BreakdownByDimensions(...)` extension methods of the `CubeResult` class. These methods take one or many free dimension numbers as a [parameter array](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/params). There's also an overload that takes a range of dimension numbers as a [Range](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/ranges) instance. As a result, `BreakdownByDimensions(...)` methods return a collection of cube slices in the form of instances of the `CubeResult` class, one per each index definition including totals. More generally, when many dimensions are specified, the result will be a collection of cube slices corresponding to all combinations of index definitions of the specified dimensions.
 
 ```csharp
 var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDimension);
@@ -586,19 +584,19 @@ cube.BreakdownByDimensions(..);
 cube.BreakdownByDimensions(1, 0);
 ```
 
-## Generic cube operations.
+## Generic Cube Operations
 
-Let's return to initial example in [Getting started](#getting-started), where we created tabular report using the cube:
+Let's return to the initial example in [Getting Started](#getting-started), where we created a tabular report using the cube:
 
 ```csharp
 var cube = orders.BuildCube(aggregationDefinition, customerIdDimension, yearDimension);
 ```
 
-Let's look again to probably the most obscure part, which builds the report from the cube:
+Let's look again at probably the most obscure part, which builds the report from the cube:
 
 ```csharp
 cube
-    .BreakdownByDimensions(..^1) // ..^1 - build rows by range of all dimensions except last
+    .BreakdownByDimensions(..^1) // ..^1 - build rows by all dimensions except the last
     .Select(row => row
         .GetBoundDimensionsAndIndexes()
         .Select(dimensionAndIndex => KeyValuePair.Create(
@@ -612,11 +610,11 @@ cube
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 ```
 
-Notice, that this code does not depend neither on specific cube nor on any concrete definitions. It builds the tabular report, in which rows correspond to all dimensions but last and columns correspond to the last dimension. It is due to the fact, that `CubeResult` instance contains all necessary information and meta-information to create such report. It illustrates the idea that it is possible to create generic transformation of any cube to particular representation, like collection, table or tree.
+Notice that this code doesn't depend on any specific cube or concrete definitions. It builds a tabular report in which rows correspond to all dimensions except the last, and columns correspond to the last dimension. This is due to the fact that a `CubeResult` instance contains all necessary information and meta-information to create such a report. It illustrates the idea that it's possible to create generic transformations of any cube to particular representations, such as collections, tables, or trees.
 
-Let's create generic transformation of cube to table similar to demonstrated in example. 
+Let's create a generic transformation of cube to table similar to what's demonstrated in the example.
 
-For beginning, we can build the single table row in form of dictionary, which keys correspond to indexes e.g. in dimension `0` (customerId) and which values contain aggregated values:
+For a start, we can build a single table row in the form of a dictionary, where keys correspond to indexes (e.g., in dimension `0` (customerId)) and values contain aggregated values:
 
 ```csharp
 cube
@@ -635,7 +633,7 @@ cube
 | Customer D | 60  |
 | Total      | 235 |
 
-We can generalize this code snippet to reusable method by extracting `cubeResult` and `columnDimensionNumber` parameters:
+We can generalize this code snippet to a reusable method by extracting `cubeResult` and `columnDimensionNumber` parameters:
 
 ```csharp
 IDictionary<string, object?> GetTableBodyColumns<TIndex, T>(
@@ -649,10 +647,10 @@ cubeResult
     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
 // Example of call
-GetTableColumns(cube, 0);
+GetTableBodyColumns(cube, 0);
 ```
 
-Now let's outline the rows of our report. Each row will correspond to index e.g. in dimension `0` (customerId) and will be represented by single-entry dictionary with aggregated value for corresponding index:
+Now let's outline the rows of our report. Each row will correspond to an index (e.g., in dimension `0` (customerId)) and will be represented by a single-entry dictionary with the aggregated value for the corresponding index:
 
 ```csharp
 cube
@@ -670,7 +668,7 @@ cube
 | 60  |
 | 235 |
 
-Method `BreakdownByDimensions(...)` takes multiple dimension numbers (as array or [range](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/ranges)), so it is possible to create table by multiple dimensions as rows:
+The method `BreakdownByDimensions(...)` takes multiple dimension numbers (as an array or [range](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-8.0/ranges)), so it's possible to create a table by multiple dimensions as rows:
 
 ```csharp
 // Creates collection of total values for all combinations of customerID and year (including totals)
@@ -680,7 +678,7 @@ cube
         .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 ```
 
-In order to add header columns, we can use method `CubeResult.GetBoundDimensionsAndIndexes(...)`, which returns collection of pairs of bound dimension and index. Each such pair can be transformed to `KeyValuePair<string, object>` with dimension title as key and index title as value:
+To add header columns, we can use the method `CubeResult.GetBoundDimensionsAndIndexes(...)`, which returns a collection of pairs of bound dimension and index. Each such pair can be transformed to a `KeyValuePair<string, object>` with the dimension title as key and index title as value:
 
 ```csharp
 cube
@@ -702,7 +700,7 @@ cube
 | Customer D | 60    |
 | Total      | 235   |
 
-We can similarly generalize code snippet above to reusable method by extracting the parameters `cubeResult`, `rowDimensions`, `getHeaderColumns` (function returning columns of header from row cube slice) and `getBodyColumns` (function returning columns of body from row cube slice) and extract `GetTableHeaderColumns()` function:
+We can similarly generalize the code snippet above to a reusable method by extracting the parameters `cubeResult`, `rowDimensions`, `getHeaderColumns` (function returning header columns from row cube slice), and `getBodyColumns` (function returning body columns from row cube slice) and extract the `GetTableHeaderColumns()` function:
 
 ```csharp
 IEnumerable<IDictionary<string, object>> GetTable<TIndex, T>(
@@ -727,19 +725,19 @@ IDictionary<string, object?> GetTableHeaderColumns<TIndex, T>(CubeResult<TIndex,
 // Example of call
 GetTable(
     cube,
-    ..^1, // ..^1 - build rows by range of all dimensions except last
+    ..^1, // ..^1 - build rows by all dimensions except the last
     GetTableHeaderColumns,
     row => new Dictionary<string, object?> { ["Value"] = (object)row.GetValue() });
 ```
 
-Now let's put everything together: call extracted method `GetTable(...)` using extracted method `GetTableColumns(...)` for generating body columns:
+Now let's put everything together: call the extracted method `GetTable(...)` using the extracted method `GetTableBodyColumns(...)` for generating body columns:
 
 ```csharp
 GetTable(
     cube,
-    ..^1, // ..^1 - build rows by range of all dimensions except last
+    ..^1, // ..^1 - build rows by all dimensions except the last
     GetTableHeaderColumns,
-    row => GetTableBodyColumns(row, ^1)); // ^1 - build columns by last dimension
+    row => GetTableBodyColumns(row, ^1)); // ^1 - build columns by the last dimension
 ```
 
 | Customers  | 2007 Year | 2008 Year | 2009 Year | Total |
@@ -750,6 +748,6 @@ GetTable(
 | Customer D | 0         | 0         | 60        | 60    |
 | Total      | 64        | 66        | 105       | 235   |
 
-If we inline code of extracted generic methods, we will get the code similar to initial example. 
+If we inline the code of the extracted generic methods, we'll get code similar to the initial example.
 
-As result, we managed to build desired report and created reusable generic methods, which allow to create similar reports.
+As a result, we managed to build the desired report and created reusable generic methods that allow us to create similar reports.

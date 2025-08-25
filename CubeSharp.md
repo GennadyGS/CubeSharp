@@ -40,6 +40,7 @@
 CubeSharp is a high-performance .NET library for building and analyzing in-memory [data cubes](https://en.wikipedia.org/wiki/Data_cube). It provides a flexible and type-safe way to perform multi-dimensional data analysis, aggregations, and reporting in your .NET applications.
 
 Key features:
+
 - Strong type safety with generics
 - Support for hierarchical dimensions
 - Flexible aggregation definitions
@@ -61,18 +62,19 @@ When building business reports or analytics features, you often need to analyze 
 Traditional approaches have limitations:
 
 1. **SQL**: While powerful, complex multi-dimensional queries can be:
-   - Hard to maintain and refactor
-   - Difficult to test
-   - Limited in reusability
-   - Challenging to version control
+    - Hard to maintain and refactor
+    - Difficult to test
+    - Limited in reusability
+    - Challenging to version control
 
 2. **Raw LINQ**: Direct LINQ operations often lead to:
-   - Repetitive filtering and grouping code
-   - Complex aggregation logic
-   - Poor performance with multiple dimensions
-   - Hard to maintain ad-hoc solutions
+    - Repetitive filtering and grouping code
+    - Complex aggregation logic
+    - Poor performance with multiple dimensions
+    - Hard to maintain ad-hoc solutions
 
 CubeSharp solves these challenges by:
+
 - Providing a systematic approach to multi-dimensional analysis
 - Enabling clean separation of dimension and aggregation definitions
 - Supporting composable and reusable components

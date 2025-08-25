@@ -581,7 +581,7 @@ cube.GetValue("bestseller"); // 300 (Order 1: 100 + Order 2: 200)
 cube.GetValue("discount");   // 250 (Order 1: 100 + Order 3: 150)  
 cube.GetValue("new");        // 150 (Order 3: 150)
 cube.GetValue();            // 450 (Total across all orders)
-``
+```
 
 ### Multi-selection with Dictionary Collections
 

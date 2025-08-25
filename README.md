@@ -13,4 +13,5 @@ dotnet add package Cube
 `sh
 dotnet build
 dotnet test
-`
+`
+

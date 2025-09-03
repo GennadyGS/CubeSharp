@@ -1,7 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
-    <File Path="CubeSharp.md" />
     <File Path="Directory.Build.props" />
+    <File Path="doc/CubeSharp.md" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/CubeSharp/CubeSharp.csproj" />

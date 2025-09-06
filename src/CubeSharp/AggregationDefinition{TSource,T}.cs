@@ -58,7 +58,7 @@ public sealed class AggregationDefinition<TSource, T>
     /// The target value for the aggregation.
     /// </returns>
     /// <remarks>
-    /// It is is used for retrieving the target
+    /// It is used for retrieving the target
     /// sequence of type <typeparamref name="T"/> for the aggregation from the
     /// source sequence of type <typeparamref name="TSource"/>.
     /// </remarks>

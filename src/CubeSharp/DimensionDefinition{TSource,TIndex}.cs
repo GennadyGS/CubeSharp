@@ -58,11 +58,11 @@ public sealed class DimensionDefinition<TSource, TIndex> : Dimension<TIndex>
             .Distinct()
             .DefaultIfEmpty();
 
-    internal IEnumerable<TIndex?> GetPrimaryIndexes(TSource source) =>
-        SelectIndexes(source).Select(GetPrimaryIndex);
-
     internal DimensionDefinition<TSource, TIndex> WithIndexDefinitions(
         params IndexDefinition<TIndex>[] indexDefinitions) =>
         new DimensionDefinition<TSource, TIndex>(
             IndexSelector, IndexSelectorFunc, Title, indexDefinitions);
+
+    private IEnumerable<TIndex?> GetPrimaryIndexes(TSource source) =>
+        SelectIndexes(source).Select(GetPrimaryIndex);
 }

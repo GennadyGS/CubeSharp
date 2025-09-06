@@ -58,7 +58,7 @@ public sealed class CubeResultTests
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A),
                         r => r.A,
-                        r => default))
+                        r => null))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A) && BInDimension(r.B),
@@ -73,22 +73,22 @@ public sealed class CubeResultTests
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A),
                         r => Constants.TotalIndex,
-                        r => default))
+                        r => null))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => BInDimension(r.B),
-                        r => default,
+                        r => null,
                         r => r.B.ToString()))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => BInDimension(r.B),
-                        r => default,
+                        r => null,
                         r => Constants.TotalIndex))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => true,
-                        r => default,
-                        r => default))
+                        r => null,
+                        r => null))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         result.AsEnumerable().Should().BeEquivalentTo(expectedResult.AsEnumerable());
     }
@@ -96,7 +96,7 @@ public sealed class CubeResultTests
     [Theory]
     [InlineData("1")]
     [InlineData("2")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void AsDictionary_ShouldReturnCorrectResult_WhenCubeIsSliced(string indexA)
     {
         bool BInDimension(int value) =>
@@ -106,7 +106,7 @@ public sealed class CubeResultTests
             Func<TestSourceRecord, bool> predicate,
             Func<TestSourceRecord, string?> getB) =>
             TestSourceData.Records
-                .Where(r => (indexA == default || r.A == indexA) && predicate(r))
+                .Where(r => (indexA == null || r.A == indexA) && predicate(r))
                 .GroupBy(getB)
                 .Select(g =>
                     KeyValuePair.Create(
@@ -126,7 +126,7 @@ public sealed class CubeResultTests
                 .Concat(
                     GetEntriesGroupedBy(
                         r => true,
-                        r => default))
+                        r => null))
                 .ToDictionary(kvp => kvp.Key.ToList(), kvp => kvp.Value)
                 .ToList();
         result
@@ -175,7 +175,7 @@ public sealed class CubeResultTests
     [Theory]
     [InlineData("1")]
     [InlineData("")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void GetBoundIndex_ReturnsCorrectResult_WhenCubeIsSlicedAndNumberIsFirst(string index)
     {
         var slice = Sut[index];
@@ -188,7 +188,7 @@ public sealed class CubeResultTests
     [Theory]
     [InlineData("1")]
     [InlineData("")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void GetBoundIndex_ReturnsCorrectResult_WhenCubeIsSlicedAndNumberIsLast(string index)
     {
         var slice = Sut[index];
@@ -201,7 +201,7 @@ public sealed class CubeResultTests
     [Theory]
     [InlineData("1")]
     [InlineData("")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void GetBoundIndex_ReturnsCorrectResult_WhenCubeIsSlicedBySecondDimensionAndNumberIsFirst(string index)
     {
         var slice = Sut.Slice(1, index);

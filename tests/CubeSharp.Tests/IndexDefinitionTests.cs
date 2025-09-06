@@ -8,21 +8,21 @@ public sealed class IndexDefinitionTests
     [Fact]
     public void Create_ShouldBeSuccess_WhenIndexIsDefault()
     {
-        var result = IndexDefinition.Create((string?)default);
+        var result = IndexDefinition.Create((string?)null);
 
-        result.Value.Should().Be(default);
+        result.Value.Should().Be(null);
     }
 
     [Fact]
     public void Create_ShouldBeSuccess_WhenDefaultIndexHasChildren()
     {
         var result = IndexDefinition.Create(
-            default,
+            null,
             null,
             IndexDefinition.Create("a"),
             IndexDefinition.Create("b"));
 
-        result.Value.Should().Be(default);
+        result.Value.Should().Be(null);
         result.Children.Count.Should().Be(2);
     }
 
@@ -33,13 +33,13 @@ public sealed class IndexDefinitionTests
             "a",
             null,
             IndexDefinition.Create("b"),
-            IndexDefinition.Create((string?)default));
+            IndexDefinition.Create((string?)null));
 
         action.Should().Throw<ArgumentException>();
     }
 
     [Theory]
-    [InlineData(default)]
+    [InlineData(null)]
     [InlineData("")]
     [InlineData("Some title")]
     public void Create_ShouldSetTitle(string title)
@@ -52,7 +52,7 @@ public sealed class IndexDefinitionTests
     }
 
     [Theory]
-    [InlineData(default)]
+    [InlineData(null)]
     [InlineData("")]
     [InlineData("Some title")]
     public void WithTitle_ShouldSetTitle(string title)
@@ -78,7 +78,7 @@ public sealed class IndexDefinitionTests
 
     [Theory]
     [InlineData("A", "1")]
-    [InlineData("A", default)]
+    [InlineData("A", null)]
     [InlineData("B", 3)]
     public void WithMetaData_ShouldSetMetaData(string key, object value)
     {
@@ -93,7 +93,7 @@ public sealed class IndexDefinitionTests
 
     [Theory]
     [InlineData("A", "foo", "B", 2)]
-    [InlineData("A", true, "B", default)]
+    [InlineData("A", true, "B", null)]
     public void WithMetaData_ShouldSetMultipleMetaDataEntries(
         string key1, object value1, string key2, object value2)
     {
@@ -113,7 +113,7 @@ public sealed class IndexDefinitionTests
     {
         Action action = () => IndexDefinition.Create(
             "1",
-            default,
+            null,
             IndexDefinition.Create("2"),
             IndexDefinition.Create("3"),
             IndexDefinition.Create("2"));
@@ -126,14 +126,14 @@ public sealed class IndexDefinitionTests
     {
         Action action = () => IndexDefinition.Create(
             "1",
-            default,
+            null,
             IndexDefinition.Create(
                 "21",
-                default,
+                null,
                 IndexDefinition.Create("3")),
             IndexDefinition.Create(
                 "22",
-                default,
+                null,
                 IndexDefinition.Create("3")));
 
         action.Should().Throw<ArgumentException>();
@@ -144,10 +144,10 @@ public sealed class IndexDefinitionTests
     {
         Action action = () => IndexDefinition.Create(
             "1",
-            default,
+            null,
             IndexDefinition.Create(
                 "2",
-                default,
+                null,
                 IndexDefinition.Create("1")));
 
         action.Should().Throw<ArgumentException>();

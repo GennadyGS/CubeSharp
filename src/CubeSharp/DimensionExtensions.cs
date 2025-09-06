@@ -103,7 +103,7 @@ public static class DimensionExtensions
     /// <exception cref="ArgumentException">Dimension already contains default index.</exception>
     public static DimensionDefinition<TSource, TIndex> WithLeadingDefaultIndex<TSource, TIndex>(
         this DimensionDefinition<TSource, TIndex> dimension,
-        string? title = default)
+        string? title = null)
         where TIndex : notnull
     {
         if (dimension.ContainsIndex(default))
@@ -134,7 +134,7 @@ public static class DimensionExtensions
     /// <exception cref="ArgumentException">Dimension already contains default index.</exception>
     public static DimensionDefinition<TSource, TIndex> WithTrailingDefaultIndex<TSource, TIndex>(
         this DimensionDefinition<TSource, TIndex> dimension,
-        string? title = default)
+        string? title = null)
         where TIndex : notnull
     {
         if (dimension.ContainsIndex(default))

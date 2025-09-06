@@ -20,7 +20,7 @@ public sealed class SliceTests
     [Fact]
     public void Index_ShouldReturnCubeResultOfSameType()
     {
-        var result = Sut[default];
+        var result = Sut[null];
 
         result.Should().BeOfType(Sut.GetType());
     }
@@ -65,7 +65,7 @@ public sealed class SliceTests
     [InlineData("3")]
     public void Index_ByDefaultShouldReturnCubeResultWithOneDimensionLess(string index2)
     {
-        var newCubeResult = Sut[default];
+        var newCubeResult = Sut[null];
 
         var result = newCubeResult.GetValue(index2);
 
@@ -78,7 +78,7 @@ public sealed class SliceTests
     [Fact]
     public void DoubleIndex_ShouldReturnCubeResultOfSameType()
     {
-        var result = Sut[default][default];
+        var result = Sut[null][null];
 
         result.Should().BeOfType(Sut.GetType());
     }
@@ -109,7 +109,7 @@ public sealed class SliceTests
     public void DoubleIndex_ShouldReturnTotalByFirstDimension_WhenFirstIndexIsDefault(
         string index2)
     {
-        var newCubeResult = Sut[default][index2];
+        var newCubeResult = Sut[null][index2];
 
         var result = newCubeResult.GetValue();
 
@@ -125,7 +125,7 @@ public sealed class SliceTests
     public void DoubleIndex_ShouldReturnTotalBySecondDimension_WhenSecondIndexIsDefault(
         string index1)
     {
-        var newCubeResult = Sut[index1][default];
+        var newCubeResult = Sut[index1][null];
 
         var result = newCubeResult.GetValue();
 
@@ -137,9 +137,9 @@ public sealed class SliceTests
 
     [Theory]
     [InlineData("1", "1", "1")]
-    [InlineData(default, "1", "1")]
-    [InlineData("1", "1", default)]
-    [InlineData(default, default, default)]
+    [InlineData(null, "1", "1")]
+    [InlineData("1", "1", null)]
+    [InlineData(null, null, null)]
     public void DoubleIndexAndGetValueWithOneArgument_ShouldThrowInvalidOperationException(
         string index1, string index2, string index3)
     {
@@ -152,9 +152,9 @@ public sealed class SliceTests
 
     [Theory]
     [InlineData("1", "1", "1")]
-    [InlineData(default, "1", "1")]
-    [InlineData("1", "1", default)]
-    [InlineData(default, default, default)]
+    [InlineData(null, "1", "1")]
+    [InlineData("1", "1", null)]
+    [InlineData(null, null, null)]
     public void TripleIndex_ShouldThrowInvalidOperationException(
         string index1, string index2, string index3)
     {
@@ -167,11 +167,11 @@ public sealed class SliceTests
     [Theory]
     [InlineData("1")]
     [InlineData("2")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void Slice_ReturnsSliceWithCorrectTotalValue_WhenOneIndexIsSpecified(string indexValue)
     {
         var expectedSumOfD = TestSourceData.Records
-            .Where(r => r.A == indexValue || indexValue == default)
+            .Where(r => r.A == indexValue || indexValue == null)
             .Sum(r => r.D);
 
         var slicedCube = Sut.Slice(indexValue);
@@ -204,18 +204,18 @@ public sealed class SliceTests
     [InlineData("1", "1")]
     [InlineData("1", "2")]
     [InlineData("1", "3")]
-    [InlineData(default, "3")]
+    [InlineData(null, "3")]
     [InlineData("2", "1")]
     [InlineData("2", "2")]
     [InlineData("2", "3")]
-    [InlineData("2", default)]
+    [InlineData("2", null)]
     public void Slice_ReturnsSliceWithCorrectTotalValue_WhenTwoIndexesAreSpecified(
         string firstIndexValue,
         string secondIndexValue)
     {
         var expectedSumOfD = TestSourceData.Records
-            .Where(r => (r.A == firstIndexValue || firstIndexValue == default)
-                        && (r.B.ToString() == secondIndexValue || secondIndexValue == default))
+            .Where(r => (r.A == firstIndexValue || firstIndexValue == null)
+                        && (r.B.ToString() == secondIndexValue || secondIndexValue == null))
             .Sum(r => r.D);
 
         var slicedCube = Sut.Slice(firstIndexValue, secondIndexValue);
@@ -324,7 +324,7 @@ public sealed class SliceTests
     public void Slice_ShouldThrowInvalidOperationException_WhenIndexIsOutOfFreeDimensions()
     {
         Func<CubeResult<string, long>> action =
-            () => Sut.Slice(2, default);
+            () => Sut.Slice(2, null);
 
         action.Should().Throw<ArgumentException>();
     }

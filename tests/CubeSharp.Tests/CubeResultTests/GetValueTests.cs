@@ -27,7 +27,7 @@ public sealed class GetValueTests
     [Fact]
     public void GetValue_ShouldReturnGrandTotal_WhenAllIndexesAreDefault()
     {
-        var result = Sut.GetValue(default, default);
+        var result = Sut.GetValue(null, null);
 
         result.Should().Be(TestSourceData.Records.Sum(r => r.D));
     }
@@ -46,7 +46,7 @@ public sealed class GetValueTests
     public void GetValue_ShouldReturnTotalByFirstDimension_WhenSecondIndexIsDefault(
         string index)
     {
-        var result = Sut.GetValue(index, default);
+        var result = Sut.GetValue(index, null);
 
         result.Should().Be(
             TestSourceData.Records
@@ -74,7 +74,7 @@ public sealed class GetValueTests
     public void GetValue_ShouldReturnTotalBySecondDimension_WhenFirstIndexIsDefault(
         string index)
     {
-        var result = Sut.GetValue(default, index);
+        var result = Sut.GetValue(null, index);
 
         result.Should().Be(
             TestSourceData.Records
@@ -114,8 +114,8 @@ public sealed class GetValueTests
     [Theory]
     [InlineData("1", "0")]
     [InlineData("3", "1")]
-    [InlineData(default, "0")]
-    [InlineData("3", default)]
+    [InlineData(null, "0")]
+    [InlineData("3", null)]
     [InlineData("4", "4")]
     public void GetValue_ShouldReturnSeedValue_WhenSomeIndexIsNotInDefinition(
         string index1, string index2)
@@ -127,9 +127,9 @@ public sealed class GetValueTests
 
     [Theory]
     [InlineData("1", "1", "1")]
-    [InlineData(default, "1", "1")]
-    [InlineData("1", "1", default)]
-    [InlineData(default, default, default)]
+    [InlineData(null, "1", "1")]
+    [InlineData("1", "1", null)]
+    [InlineData(null, null, null)]
     public void GetValue_ShouldThrowArgumentException_WhenTooManyIndexesIsSpecified(
         string index1, string index2, string index3)
     {

@@ -34,7 +34,7 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<TSource, TIndex> Create<TSource, TIndex>(
         Expression<Func<TSource, TIndex?>> indexSelector,
-        string? title = default,
+        string? title = null,
         params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
         new DimensionDefinition<TSource, TIndex>(
@@ -68,7 +68,7 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<TSource, TIndex> CreateWithMultiSelector<TSource, TIndex>(
         Expression<Func<TSource, IEnumerable<TIndex?>>> indexSelector,
-        string? title = default,
+        string? title = null,
         params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
         new DimensionDefinition<TSource, TIndex>(indexSelector, title, indexDefinitions);
@@ -96,8 +96,8 @@ public static class DimensionDefinition
     /// or as unit dimension e.g. serving as placeholder.
     /// </remarks>
     public static DimensionDefinition<TSource, TIndex> CreateDefault<TSource, TIndex>(
-        string? title = default,
-        string? indexTitle = default)
+        string? title = null,
+        string? indexTitle = null)
         where TIndex : notnull =>
         Create<TSource, TIndex>(
             _ => default,
@@ -127,7 +127,7 @@ public static class DimensionDefinition
     /// <exception cref="ArgumentException">Default index should be the only root index.</exception>
     public static DimensionDefinition<IDictionary<string, object?>, TIndex> CreateForDictionaryCollection<TIndex>(
         Expression<Func<IDictionary<string, object?>, TIndex?>> indexSelector,
-        string? title = default,
+        string? title = null,
         params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
         Create(indexSelector, title, indexDefinitions);
@@ -157,7 +157,7 @@ public static class DimensionDefinition
     public static DimensionDefinition<IDictionary<string, object>, TIndex>
         CreateForDictionaryCollectionWithMultiSelector<TIndex>(
             Expression<Func<IDictionary<string, object>, IEnumerable<TIndex?>>> indexSelector,
-            string? title = default,
+            string? title = null,
             params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
         CreateWithMultiSelector(indexSelector, title, indexDefinitions);
@@ -184,8 +184,8 @@ public static class DimensionDefinition
     /// </remarks>
     public static DimensionDefinition<IDictionary<string, object?>, TIndex>
         CreateDefaultForDictionaryCollection<TIndex>(
-            string? title = default,
-            string? indexTitle = default)
+            string? title = null,
+            string? indexTitle = null)
             where TIndex : notnull =>
         CreateDefault<IDictionary<string, object?>, TIndex>(title, indexTitle);
 
@@ -222,7 +222,7 @@ public static class DimensionDefinition
     public static DimensionDefinition<TSource, TIndex> CreateForCollection<TSource, TIndex>(
         IEnumerable<TSource> collection,
         Expression<Func<TSource, TIndex?>> indexSelector,
-        string? title = default,
+        string? title = null,
         params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
         Create(indexSelector, title, indexDefinitions);
@@ -262,7 +262,7 @@ public static class DimensionDefinition
         CreateForCollectionWithMultiSelector<TSource, TIndex>(
             IEnumerable<TSource> collection,
             Expression<Func<TSource, IEnumerable<TIndex?>>> indexSelector,
-            string? title = default,
+            string? title = null,
             params IndexDefinition<TIndex>[] indexDefinitions)
             where TIndex : notnull =>
             CreateWithMultiSelector(indexSelector, title, indexDefinitions);

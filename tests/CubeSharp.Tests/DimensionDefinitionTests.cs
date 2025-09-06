@@ -26,7 +26,7 @@ public sealed class DimensionDefinitionTests
     {
         var sut = DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create("2"),
             IndexDefinition.Create("3"));
@@ -48,11 +48,11 @@ public sealed class DimensionDefinitionTests
     {
         var sut = DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create(
                 "2",
-                default,
+                null,
                 IndexDefinition.Create("21"),
                 IndexDefinition.Create("22")),
             IndexDefinition.Create("3"));
@@ -69,7 +69,7 @@ public sealed class DimensionDefinitionTests
     {
         var sut = DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create(
                 new[]
@@ -92,15 +92,15 @@ public sealed class DimensionDefinitionTests
     {
         var sut = DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create(
                 "1",
-                default,
+                null,
                 IndexDefinition.Create("11"),
                 IndexDefinition.Create("12")),
             IndexDefinition.Create(
                 "2",
-                default,
+                null,
                 IndexDefinition.Create("21"),
                 IndexDefinition.Create(
                     new[]
@@ -111,7 +111,7 @@ public sealed class DimensionDefinitionTests
                     "22")),
             IndexDefinition.Create(
                 "3",
-                default,
+                null,
                 IndexDefinition.Create("31")));
         sut.AsEnumerable().Select(def => def.Value).Should().BeEquivalentTo(
             LargeSourceArray,
@@ -129,7 +129,7 @@ public sealed class DimensionDefinitionTests
     }
 
     [Theory]
-    [InlineData(default)]
+    [InlineData(null)]
     [InlineData("")]
     [InlineData("Some title")]
     public void Create_ShouldSetTitle(string title)
@@ -142,7 +142,7 @@ public sealed class DimensionDefinitionTests
     }
 
     [Theory]
-    [InlineData(default)]
+    [InlineData(null)]
     [InlineData("")]
     [InlineData("Some title")]
     public void WithTitle_ShouldSetTitle(string title)
@@ -168,7 +168,7 @@ public sealed class DimensionDefinitionTests
 
     [Theory]
     [InlineData("A", "1")]
-    [InlineData("A", default)]
+    [InlineData("A", null)]
     [InlineData("B", 3)]
     public void WithMetaData_ShouldSetMetaData(string key, object value)
     {
@@ -183,7 +183,7 @@ public sealed class DimensionDefinitionTests
 
     [Theory]
     [InlineData("A", "1")]
-    [InlineData("A", default)]
+    [InlineData("A", null)]
     [InlineData("B", 3)]
     public void WithMetaData_ShouldSetMetaData_WhenTuplePassed(string key, object value)
     {
@@ -198,7 +198,7 @@ public sealed class DimensionDefinitionTests
 
     [Theory]
     [InlineData("A", "foo", "B", 2)]
-    [InlineData("A", true, "B", default)]
+    [InlineData("A", true, "B", null)]
     public void WithMetaData_ShouldSetMultipleMetaDataEntries(
         string key1, object value1, string key2, object value2)
     {
@@ -218,7 +218,7 @@ public sealed class DimensionDefinitionTests
     {
         Action action = () => DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create("2"),
             IndexDefinition.Create("1"));
@@ -231,7 +231,7 @@ public sealed class DimensionDefinitionTests
     {
         Action action = () => DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create(default(string)),
             IndexDefinition.Create("a"),
             IndexDefinition.Create(default(string)));
@@ -244,14 +244,14 @@ public sealed class DimensionDefinitionTests
     {
         Action action = () => DimensionDefinition.Create(
             (string s) => s,
-            default,
+            null,
             IndexDefinition.Create(
                 "1",
-                default,
+                null,
                 IndexDefinition.Create("3")),
             IndexDefinition.Create(
                 "2",
-                default,
+                null,
                 IndexDefinition.Create("3")));
 
         action.Should().Throw<ArgumentException>();
@@ -273,13 +273,13 @@ public sealed class DimensionDefinitionTests
         var result = DimensionDefinition.CreateDefault<string, string>();
 
         result.IndexDefinitions.Single()
-            .Should().BeEquivalentTo(IndexDefinition.Create((string?)default));
+            .Should().BeEquivalentTo(IndexDefinition.Create((string?)null));
     }
 
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void CreateDefault_ShouldCreateDimensionWithCorrectTitle(string title)
     {
         var result = DimensionDefinition.CreateDefault<string, string>(title);
@@ -290,12 +290,12 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void CreateDefault_ShouldCreateDimensionWithCorrectIndexTitle(string indexTitle)
     {
-        var result = DimensionDefinition.CreateDefault<string, string>(default, indexTitle);
+        var result = DimensionDefinition.CreateDefault<string, string>(null, indexTitle);
 
-        result[default].Title.Should().Be(indexTitle);
+        result[null].Title.Should().Be(indexTitle);
     }
 
     [Fact]
@@ -314,7 +314,7 @@ public sealed class DimensionDefinitionTests
     {
         var result = DimensionDefinition.CreateForDictionaryCollection(
             r => (string?)r["A"],
-            default,
+            null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create("2"));
 
@@ -331,11 +331,11 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void CreateForDictionaryCollection_ShouldCreateDimensionDefinitionWithCorrectTitle(string title)
     {
         var result = DimensionDefinition.CreateForDictionaryCollection(
-            r => (string?)default,
+            r => (string?)null,
             title);
 
         result.Title.Should().Be(title);
@@ -357,13 +357,13 @@ public sealed class DimensionDefinitionTests
         var result = DimensionDefinition.CreateDefaultForDictionaryCollection<string>();
 
         result.IndexDefinitions.Single()
-            .Should().BeEquivalentTo(IndexDefinition.Create((string?)default));
+            .Should().BeEquivalentTo(IndexDefinition.Create((string?)null));
     }
 
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void CreateDefaultForDictionaryCollection_ShouldCreateDimensionWithCorrectTitle(string title)
     {
         var result = DimensionDefinition.CreateDefaultForDictionaryCollection<string>(title);
@@ -374,12 +374,12 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void CreateDefaultForDictionaryCollection_ShouldCreateDimensionWithCorrectIndexTitle(string indexTitle)
     {
-        var result = DimensionDefinition.CreateDefaultForDictionaryCollection<string>(default, indexTitle);
+        var result = DimensionDefinition.CreateDefaultForDictionaryCollection<string>(null, indexTitle);
 
-        result[default].Title.Should().Be(indexTitle);
+        result[null].Title.Should().Be(indexTitle);
     }
 
     [Theory]
@@ -402,7 +402,7 @@ public sealed class DimensionDefinitionTests
         var result = DimensionDefinition.CreateForCollection(
             Array.Empty<string>(),
             s => s,
-            default,
+            null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create("2"));
 
@@ -419,7 +419,7 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void CreateForCollection_ShouldCreateDimensionDefinitionWithCorrectTitle(string title)
     {
         var result = DimensionDefinition.CreateForCollection(
@@ -438,11 +438,11 @@ public sealed class DimensionDefinitionTests
             "dimension title",
             IndexDefinition.Create(
                 "1",
-                default,
+                null,
                 IndexDefinition.Create("3")),
             IndexDefinition.Create(
-                default,
-                default,
+                null,
+                null,
                 IndexDefinition.Create("4")));
 
         action.Should().Throw<ArgumentException>();
@@ -451,13 +451,13 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void WithTrailingDefaultIndex_ShouldAddTrailingDefaultIndex(string title)
     {
         var sut = DimensionDefinition
             .Create(
                 (string s) => s,
-                default,
+                null,
                 IndexDefinition.Create("1"),
                 IndexDefinition.Create("2"));
         var result = sut.WithTrailingDefaultIndex(title);
@@ -473,7 +473,7 @@ public sealed class DimensionDefinitionTests
                             IndexDefinition.Create("1"),
                             IndexDefinition.Create("2"),
                         },
-                        default,
+                        null,
                         title),
                 },
                 options => options.WithStrictOrdering());
@@ -482,13 +482,13 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("abc")]
     [InlineData("123")]
-    [InlineData(default)]
+    [InlineData(null)]
     public void WithLeadingDefaultIndex_ShouldAddLeadingDefaultIndex(string title)
     {
         var sut = DimensionDefinition
             .Create(
                 (string s) => s,
-                default,
+                null,
                 IndexDefinition.Create("1"),
                 IndexDefinition.Create("2"));
         var result = sut.WithLeadingDefaultIndex(title);
@@ -497,7 +497,7 @@ public sealed class DimensionDefinitionTests
                 new[]
                 {
                     IndexDefinition.Create(
-                        default,
+                        null,
                         title,
                         IndexDefinition.Create("1"),
                         IndexDefinition.Create("2")),
@@ -526,20 +526,20 @@ public sealed class DimensionDefinitionTests
     [Theory]
     [InlineData("21", "2")]
     [InlineData("22", "2")]
-    [InlineData("1", default)]
-    [InlineData("2", default)]
-    [InlineData("3", default)]
-    [InlineData(default, default)]
+    [InlineData("1", null)]
+    [InlineData("2", null)]
+    [InlineData("3", null)]
+    [InlineData(null, null)]
     public void GetParentIndex_ShouldReturnCorrectParentIndex(string index, string expectedResult)
     {
         var sut = DimensionDefinition
             .Create(
                 (string s) => s,
-                default,
+                null,
                 IndexDefinition.Create("1"),
                 IndexDefinition.Create(
                     "2",
-                    default,
+                    null,
                     IndexDefinition.Create("21"),
                     IndexDefinition.Create("22")));
         var result = sut.GetParentIndex(index);

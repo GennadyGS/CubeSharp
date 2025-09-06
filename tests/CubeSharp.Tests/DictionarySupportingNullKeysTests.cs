@@ -31,8 +31,8 @@ public sealed class DictionarySupportingNullKeysTests
             new DictionarySupportingNullKeys<string, int>(
                 new[]
                 {
-                    KeyValuePair.Create((string?)default, 1),
-                    KeyValuePair.Create((string?)default, 2),
+                    KeyValuePair.Create((string?)null, 1),
+                    KeyValuePair.Create((string?)null, 2),
                 });
 
         action.Should().Throw<ArgumentException>();
@@ -98,7 +98,7 @@ public sealed class DictionarySupportingNullKeysTests
     {
         var sut = new DictionarySupportingNullKeys<string, int>(GetCastedInputWithoutNull());
 
-        Func<int> action = () => sut[default];
+        Func<int> action = () => sut[null];
 
         action.Should().Throw<KeyNotFoundException>();
     }

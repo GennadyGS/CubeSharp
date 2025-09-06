@@ -27,7 +27,7 @@ public static class IndexDefinition
     /// </exception>
     public static IndexDefinition<T> Create<T>(
         T? value,
-        string? title = default,
+        string? title = null,
         params IndexDefinition<T>[] children) =>
         new IndexDefinition<T>(value, title, children, false);
 
@@ -52,7 +52,7 @@ public static class IndexDefinition
     /// Index definition contains duplicated values.
     /// </exception>
     public static IndexDefinition<T> Create<T>(
-        IndexDefinition<T>[] children, T? value, string? title = default)
+        IndexDefinition<T>[] children, T? value, string? title = null)
         where T : notnull =>
         new IndexDefinition<T>(value, title, children, true);
 }

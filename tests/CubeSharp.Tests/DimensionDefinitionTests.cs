@@ -7,7 +7,7 @@ namespace CubeSharp.Tests;
 public sealed class DimensionDefinitionTests
 {
     private static readonly string[] SourceArray0 = ["1", "2", "21", "22", "3"];
-    private static readonly string[] SourceArra1 = ["1", "21", "22", "2", "3"];
+    private static readonly string[] SourceArray1 = ["1", "21", "22", "2", "3"];
     private static readonly string[] LargeSourceArray =
         ["1", "11", "12", "2", "21", "221", "222", "22", "3", "31"];
 
@@ -81,7 +81,7 @@ public sealed class DimensionDefinitionTests
         var result = sut.AsEnumerable().Select(def => def.Value).ToList();
 
         result.Should().BeEquivalentTo(
-            SourceArra1,
+            SourceArray1,
             options => options.WithStrictOrdering());
     }
 

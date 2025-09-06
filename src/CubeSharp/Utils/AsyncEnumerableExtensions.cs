@@ -2,10 +2,6 @@
 
 internal static class AsyncEnumerableExtensions
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Minor Code Smell",
-        "S4261:Methods should be named according to their synchronicities",
-        Justification = "Method name should match LINQ conventions")]
     public static async IAsyncEnumerable<TResult> SelectManyAsync<TSource, TCollection, TResult>(
         this IAsyncEnumerable<TSource> source,
         Func<TSource, IEnumerable<TCollection>> collectionSelector,

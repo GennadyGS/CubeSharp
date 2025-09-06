@@ -7,27 +7,27 @@ namespace CubeSharp.Tests;
 
 public sealed class ListExtensionsTests
 {
-    private static readonly int[] SourceArr0 = new[] { 3, 4 };
-    private static readonly int[] SourceArr1 = new[] { 1, 2 };
-    private static readonly int[] SourceArr2 = new[] { 3, 4 };
-    private static readonly int[] SourceArr3 = new[] { 1, 3 };
-    private static readonly int[] SourceArr4 = new[] { 1, 4 };
-    private static readonly int[] SourceArr5 = new[] { 2, 3 };
-    private static readonly int[] SourceArr6 = new[] { 2, 4 };
-    private static readonly int[] SourceArr7 = new[] { 5, 6 };
-    private static readonly int[] SourceArr8 = new[] { 1, 3, 5 };
-    private static readonly int[] SourceArr9 = new[] { 1, 3, 6 };
-    private static readonly int[] SourceArr10 = new[] { 1, 4, 5 };
-    private static readonly int[] SourceArr11 = new[] { 1, 4, 6 };
-    private static readonly int[] SourceArr12 = new[] { 2, 3, 5 };
-    private static readonly int[] SourceArr13 = new[] { 2, 3, 6 };
-    private static readonly int[] SourceArr14 = new[] { 2, 4, 5 };
-    private static readonly int[] SourceArr15 = new[] { 2, 4, 6 };
-    private static readonly int[] SourceArr16 = new[] { 1, 2, 3, 4 };
-    private static readonly int[] SingleElementArr0 = new[] { 1 };
-    private static readonly int[] SingleElementArr1 = new[] { 2 };
-    private static readonly int[] SingleElementArr2 = new[] { 3 };
-    private static readonly int[] SingleElementArr3 = new[] { 4 };
+    private static readonly int[] SourceArr0 = [3, 4];
+    private static readonly int[] SourceArr1 = [1, 2];
+    private static readonly int[] SourceArr2 = [3, 4];
+    private static readonly int[] SourceArr3 = [1, 3];
+    private static readonly int[] SourceArr4 = [1, 4];
+    private static readonly int[] SourceArr5 = [2, 3];
+    private static readonly int[] SourceArr6 = [2, 4];
+    private static readonly int[] SourceArr7 = [5, 6];
+    private static readonly int[] SourceArr8 = [1, 3, 5];
+    private static readonly int[] SourceArr9 = [1, 3, 6];
+    private static readonly int[] SourceArr10 = [1, 4, 5];
+    private static readonly int[] SourceArr11 = [1, 4, 6];
+    private static readonly int[] SourceArr12 = [2, 3, 5];
+    private static readonly int[] SourceArr13 = [2, 3, 6];
+    private static readonly int[] SourceArr14 = [2, 4, 5];
+    private static readonly int[] SourceArr15 = [2, 4, 6];
+    private static readonly int[] SourceArr16 = [1, 2, 3, 4];
+    private static readonly int[] SingleElementArr0 = [1];
+    private static readonly int[] SingleElementArr1 = [2];
+    private static readonly int[] SingleElementArr2 = [3];
+    private static readonly int[] SingleElementArr3 = [4];
 
     public static TheoryData<IEnumerable<TestCaseModel>> InputSets =>
         TheoryDataBuilder.TheoryData(GetTestData());
@@ -65,54 +65,54 @@ public sealed class ListExtensionsTests
         {
             new TestCaseModel
             {
-                Input = new[]
-                {
-                    Array.Empty<int>(),
+                Input =
+                [
+                    [],
                     SourceArr0,
-                },
-                ExpectedOutput = Array.Empty<int[]>(),
+                ],
+                ExpectedOutput = [],
             },
             new TestCaseModel
             {
-                Input = new[]
-                {
-                    Array.Empty<int>(),
-                },
-                ExpectedOutput = Array.Empty<int[]>(),
+                Input =
+                [
+                    [],
+                ],
+                ExpectedOutput = [],
             },
             new TestCaseModel
             {
-                Input = Array.Empty<int[]>(),
-                ExpectedOutput = new[]
-                {
-                    Array.Empty<int>(),
-                },
+                Input = [],
+                ExpectedOutput =
+                [
+                    [],
+                ],
             },
             new TestCaseModel
             {
-                Input = new[]
-                {
+                Input =
+                [
                     SourceArr1,
                     SourceArr2,
-                },
-                ExpectedOutput = new[]
-                {
+                ],
+                ExpectedOutput =
+                [
                     SourceArr3,
                     SourceArr4,
                     SourceArr5,
                     SourceArr6,
-                },
+                ],
             },
             new TestCaseModel
             {
-                Input = new[]
-                {
+                Input =
+                [
                     SourceArr1,
                     SourceArr2,
                     SourceArr7,
-                },
-                ExpectedOutput = new[]
-                {
+                ],
+                ExpectedOutput =
+                [
                     SourceArr8,
                     SourceArr9,
                     SourceArr10,
@@ -121,14 +121,14 @@ public sealed class ListExtensionsTests
                     SourceArr13,
                     SourceArr14,
                     SourceArr15,
-                },
+                ],
             },
             new TestCaseModel
             {
-                Input = new[]
-                {
+                Input =
+                [
                     SourceArr16,
-                },
+                ],
                 ExpectedOutput = new List<IReadOnlyList<int>>
                 {
                     SingleElementArr0,
@@ -139,17 +139,17 @@ public sealed class ListExtensionsTests
             },
             new TestCaseModel
             {
-                Input = new[]
-                {
+                Input =
+                [
                     SingleElementArr0,
                     SingleElementArr1,
                     SingleElementArr2,
                     SingleElementArr3,
-                },
-                ExpectedOutput = new[]
-                {
+                ],
+                ExpectedOutput =
+                [
                     SourceArr16,
-                },
+                ],
             },
         };
 

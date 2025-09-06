@@ -76,9 +76,7 @@ public class Dimension<TIndex>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     internal IEnumerable<TIndex?> GetAffectedIndexes(TIndex? primaryIndex) =>
-        AffectedIndexesMap.GetValueOrDefault(
-            primaryIndex,
-            new[] { default(TIndex) });
+        AffectedIndexesMap.GetValueOrDefault(primaryIndex, [default(TIndex)]);
 
     internal TIndex? GetPrimaryIndex(TIndex? index) =>
         ContainsIndex(index)

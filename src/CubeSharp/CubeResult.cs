@@ -14,7 +14,7 @@ public sealed class CubeResult<TIndex, T>
         IReadOnlyDictionary<IReadOnlyList<TIndex?>, T> resultMap,
         T defaultValue,
         IReadOnlyList<Dimension<TIndex>> allDimensions)
-        : this(resultMap, defaultValue, allDimensions, Array.Empty<(int, TIndex?)>())
+        : this(resultMap, defaultValue, allDimensions, [])
     {
     }
 

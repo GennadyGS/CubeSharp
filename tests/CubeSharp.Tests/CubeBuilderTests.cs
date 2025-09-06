@@ -12,10 +12,10 @@ namespace CubeSharp.Tests;
     Justification = "Test logic is convenient to keep in single method")]
 public sealed class CubeBuilderTests
 {
-    private static readonly string[] StringSourceArray = new[] { "1", "2" };
-    private static readonly int[] IntFourSourceArray = new[] { 1, 2, 3, 4 };
-    private static readonly int[] IntThreeSourceArray = new[] { 1, 2, 3 };
-    private static readonly decimal[] DecimalSourceArray = new[] { 11m, 22m };
+    private static readonly string[] StringSourceArray = ["1", "2"];
+    private static readonly int[] IntFourSourceArray = [1, 2, 3, 4];
+    private static readonly int[] IntThreeSourceArray = [1, 2, 3];
+    private static readonly decimal[] DecimalSourceArray = [11m, 22m];
 
     [Fact]
     public void BuildCube_ShouldGenerateCorrect1DCube()

@@ -9,17 +9,17 @@ namespace CubeSharp.Tests;
 public sealed class DictionarySupportingNullKeysTests
 {
     private static readonly KeyValuePair<string?, int>[] InputWithNull =
-    {
+    [
         KeyValuePair.Create((string?)"A", 1),
         KeyValuePair.Create((string?)"B", 2),
         KeyValuePair.Create((string?)null, 3),
-    };
+    ];
 
     private static readonly KeyValuePair<string, int>[] InputWithoutNull =
-    {
+    [
         KeyValuePair.Create("A", 1),
         KeyValuePair.Create("B", 2),
-    };
+    ];
 
     public static TheoryData<KeyValuePair<string?, int>[]> TestInputs =>
         TheoryDataBuilder.TheoryData(InputWithNull, GetCastedInputWithoutNull());
@@ -29,11 +29,10 @@ public sealed class DictionarySupportingNullKeysTests
     {
         Action action = () =>
             new DictionarySupportingNullKeys<string, int>(
-                new[]
-                {
-                    KeyValuePair.Create((string?)null, 1),
+            [
+                KeyValuePair.Create((string?)null, 1),
                     KeyValuePair.Create((string?)null, 2),
-                });
+            ]);
 
         action.Should().Throw<ArgumentException>();
     }

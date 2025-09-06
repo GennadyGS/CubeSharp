@@ -6,10 +6,10 @@ namespace CubeSharp.Tests;
 
 public sealed class DimensionDefinitionTests
 {
-    private static readonly string[] SourceArray0 = new[] { "1", "2", "21", "22", "3" };
-    private static readonly string[] SourceArra1 = new[] { "1", "21", "22", "2", "3" };
+    private static readonly string[] SourceArray0 = ["1", "2", "21", "22", "3"];
+    private static readonly string[] SourceArra1 = ["1", "21", "22", "2", "3"];
     private static readonly string[] LargeSourceArray =
-        new[] { "1", "11", "12", "2", "21", "221", "222", "22", "3", "31" };
+        ["1", "11", "12", "2", "21", "221", "222", "22", "3", "31"];
 
     [Fact]
     public void Enumerator_ShouldReturnEmpty_WhenDefinitionIsEmpty()
@@ -34,12 +34,11 @@ public sealed class DimensionDefinitionTests
         var result = sut.AsEnumerable();
 
         result.Should().BeEquivalentTo(
-            new[]
-            {
+            [
                 IndexDefinition.Create("1"),
                 IndexDefinition.Create("2"),
                 IndexDefinition.Create("3"),
-            },
+            ],
             options => options.WithStrictOrdering());
     }
 
@@ -72,11 +71,10 @@ public sealed class DimensionDefinitionTests
             null,
             IndexDefinition.Create("1"),
             IndexDefinition.Create(
-                new[]
-                {
+                [
                     IndexDefinition.Create("21"),
                     IndexDefinition.Create("22"),
-                },
+                ],
                 "2"),
             IndexDefinition.Create("3"));
 
@@ -103,11 +101,10 @@ public sealed class DimensionDefinitionTests
                 null,
                 IndexDefinition.Create("21"),
                 IndexDefinition.Create(
-                    new[]
-                    {
+                    [
                         IndexDefinition.Create("221"),
                         IndexDefinition.Create("222"),
-                    },
+                    ],
                     "22")),
             IndexDefinition.Create(
                 "3",
@@ -320,11 +317,10 @@ public sealed class DimensionDefinitionTests
 
         result.IndexDefinitions
             .Should().BeEquivalentTo(
-                new[]
-                {
+                [
                     IndexDefinition.Create("1"),
                     IndexDefinition.Create("2"),
-                },
+                ],
                 options => options.WithStrictOrdering());
     }
 
@@ -408,11 +404,10 @@ public sealed class DimensionDefinitionTests
 
         result.IndexDefinitions
             .Should().BeEquivalentTo(
-                new[]
-                {
+                [
                     IndexDefinition.Create("1"),
                     IndexDefinition.Create("2"),
-                },
+                ],
                 options => options.WithStrictOrdering());
     }
 
@@ -463,19 +458,17 @@ public sealed class DimensionDefinitionTests
         var result = sut.WithTrailingDefaultIndex(title);
         result.AsEnumerable()
             .Should().BeEquivalentTo(
-                new[]
-                {
+                [
                     IndexDefinition.Create("1"),
                     IndexDefinition.Create("2"),
                     IndexDefinition.Create(
-                        new[]
-                        {
+                        [
                             IndexDefinition.Create("1"),
                             IndexDefinition.Create("2"),
-                        },
+                        ],
                         null,
                         title),
-                },
+                ],
                 options => options.WithStrictOrdering());
     }
 
@@ -494,8 +487,7 @@ public sealed class DimensionDefinitionTests
         var result = sut.WithLeadingDefaultIndex(title);
         result.AsEnumerable()
             .Should().BeEquivalentTo(
-                new[]
-                {
+                [
                     IndexDefinition.Create(
                         null,
                         title,
@@ -503,7 +495,7 @@ public sealed class DimensionDefinitionTests
                         IndexDefinition.Create("2")),
                     IndexDefinition.Create("1"),
                     IndexDefinition.Create("2"),
-                },
+                ],
                 options => options.WithStrictOrdering());
     }
 

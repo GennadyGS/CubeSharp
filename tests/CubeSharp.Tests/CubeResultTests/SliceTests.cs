@@ -6,16 +6,11 @@ namespace CubeSharp.Tests.CubeResultTests;
 
 public sealed class SliceTests
 {
-    public SliceTests()
-    {
-        Sut = CubeBuilder.BuildCube(
-            TestSourceData.Records,
+    private CubeResult<string, long> Sut { get; } =
+        TestSourceData.Records.BuildCube(
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.A,
             TestDimensionDefinitions.B);
-    }
-
-    private CubeResult<string, long> Sut { get; }
 
     [Fact]
     public void Index_ShouldReturnCubeResultOfSameType()

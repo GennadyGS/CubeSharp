@@ -6,15 +6,11 @@ namespace CubeSharp.Tests.CubeResultTests;
 
 public sealed class GetValueTests
 {
-    public GetValueTests()
-    {
-        Sut = TestSourceData.Records.BuildCube(
+    private CubeResult<string, long> Sut { get; } =
+        TestSourceData.Records.BuildCube(
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.A,
             TestDimensionDefinitions.B);
-    }
-
-    private CubeResult<string, long> Sut { get; }
 
     [Fact]
     public void GetValue_ShouldReturnGrandTotal_WhenNoIndexesSpecified()

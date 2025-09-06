@@ -2,17 +2,12 @@
 
 namespace CubeSharp.Utils;
 
-internal sealed class EquatableList<T>
+internal sealed class EquatableList<T>(IReadOnlyList<T> items)
     : IReadOnlyList<T>, IEquatable<EquatableList<T>>
 {
-    public EquatableList(IReadOnlyList<T> items)
-    {
-        Items = items;
-    }
-
     public int Count => Items.Count;
 
-    private IReadOnlyList<T> Items { get; }
+    private IReadOnlyList<T> Items { get; } = items;
 
     public T this[int index] => Items[index];
 

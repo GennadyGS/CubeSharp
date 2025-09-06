@@ -10,16 +10,11 @@ namespace CubeSharp.Tests.CubeResultTests;
     Justification = "Test logic is convenient to keep in single method")]
 public sealed class CubeResultTests
 {
-    public CubeResultTests()
-    {
-        Sut = CubeBuilder.BuildCube(
-            TestSourceData.Records,
+    private CubeResult<string, long> Sut { get; } =
+        TestSourceData.Records.BuildCube(
             TestAggregationDefinitions.SumOfD,
             TestDimensionDefinitions.A,
             TestDimensionDefinitions.B);
-    }
-
-    private CubeResult<string, long> Sut { get; }
 
     [Fact]
     public void AsDictionary_ShouldReturnCorrectResult()

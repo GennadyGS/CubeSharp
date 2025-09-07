@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <IsPackable>true</IsPackable>
-    <PackageProjectUrl>https://github.com/GennadyGS/Cube</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/GennadyGS/Cube</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/GennadyGS/CubeSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GennadyGS/CubeSharp</RepositoryUrl>
     <PackageTags>data-cube;olap;multidimensional;analytics;aggregation;hierarchies;linq;async;.net</PackageTags>
     <Description>CubeSharp is a .NET library for constructing and querying in-memory multidimensional data cubes, offering hierarchical navigation, flexible aggregations, and async LINQ-based querying.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

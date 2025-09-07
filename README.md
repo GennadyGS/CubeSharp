@@ -172,5 +172,4 @@ MIT (see LICENSE). Packaged README references this file.
 ## Additional References
 - doc/01-Tutorial.ipynb – Step-by-step tutorial
 - doc/02-Examples.ipynb – Cookbook patterns & helper extensions
-- doc/CubeSharp.md – Markdown export (narrative form)
 - tests/ – Specification by example

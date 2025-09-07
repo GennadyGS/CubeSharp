@@ -92,7 +92,7 @@ public sealed class CubeResultTests
     [InlineData("1")]
     [InlineData("2")]
     [InlineData(null)]
-    public void AsDictionary_ShouldReturnCorrectResult_WhenCubeIsSliced(string indexA)
+    public void AsDictionary_ShouldReturnCorrectResult_WhenCubeIsSliced(string? indexA)
     {
         bool BInDimension(int value) =>
             TestDimensionDefinitions.B.ContainsIndex(value.ToString());
@@ -103,10 +103,7 @@ public sealed class CubeResultTests
             TestSourceData.Records
                 .Where(r => (indexA == null || r.A == indexA) && predicate(r))
                 .GroupBy(getB)
-                .Select(g =>
-                    KeyValuePair.Create(
-                        new[] { g.Key },
-                        g.Sum(r => r.D)));
+                .Select(g => KeyValuePair.Create(new[] { g.Key }, g.Sum(r => r.D)));
 
         var result = Sut[indexA].AsDictionary().ToList();
 

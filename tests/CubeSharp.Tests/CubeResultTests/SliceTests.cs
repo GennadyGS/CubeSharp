@@ -163,7 +163,7 @@ public sealed class SliceTests
     [InlineData("1")]
     [InlineData("2")]
     [InlineData(null)]
-    public void Slice_ReturnsSliceWithCorrectTotalValue_WhenOneIndexIsSpecified(string indexValue)
+    public void Slice_ReturnsSliceWithCorrectTotalValue_WhenOneIndexIsSpecified(string? indexValue)
     {
         var expectedSumOfD = TestSourceData.Records
             .Where(r => r.A == indexValue || indexValue == null)
@@ -205,12 +205,12 @@ public sealed class SliceTests
     [InlineData("2", "3")]
     [InlineData("2", null)]
     public void Slice_ReturnsSliceWithCorrectTotalValue_WhenTwoIndexesAreSpecified(
-        string firstIndexValue,
-        string secondIndexValue)
+        string? firstIndexValue, string? secondIndexValue)
     {
         var expectedSumOfD = TestSourceData.Records
-            .Where(r => (r.A == firstIndexValue || firstIndexValue == null)
-                        && (r.B.ToString() == secondIndexValue || secondIndexValue == null))
+            .Where(r =>
+                (r.A == firstIndexValue || firstIndexValue == null) &&
+                (r.B.ToString() == secondIndexValue || secondIndexValue == null))
             .Sum(r => r.D);
 
         var slicedCube = Sut.Slice(firstIndexValue, secondIndexValue);

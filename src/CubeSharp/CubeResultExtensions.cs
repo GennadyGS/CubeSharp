@@ -25,7 +25,7 @@ public static class CubeResultExtensions
     /// by the index <paramref name="index"/> in the first free dimension.
     /// </returns>
     public static CubeResult<TIndex, T> Slice<TIndex, T>(
-        this CubeResult<TIndex, T> cubeResult, TIndex index)
+        this CubeResult<TIndex, T> cubeResult, TIndex? index)
         where TIndex : notnull =>
         cubeResult.Slice(0, index);
 

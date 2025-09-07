@@ -48,42 +48,42 @@ public sealed class CubeResultTests
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A) && BInDimension(r.B),
                         r => r.A,
-                        r => Constants.TotalIndex))
+                        _ => Constants.TotalIndex))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A),
                         r => r.A,
-                        r => null))
+                        _ => null))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A) && BInDimension(r.B),
-                        r => Constants.TotalIndex,
+                        _ => Constants.TotalIndex,
                         r => r.B.ToString()))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A) && BInDimension(r.B),
-                        r => Constants.TotalIndex,
-                        r => Constants.TotalIndex))
+                        _ => Constants.TotalIndex,
+                        _ => Constants.TotalIndex))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => AInDimension(r.A),
-                        r => Constants.TotalIndex,
-                        r => null))
+                        _ => Constants.TotalIndex,
+                        _ => null))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => BInDimension(r.B),
-                        r => null,
+                        _ => null,
                         r => r.B.ToString()))
                 .Concat(
                     GetEntriesGroupedBy(
                         r => BInDimension(r.B),
-                        r => null,
-                        r => Constants.TotalIndex))
+                        _ => null,
+                        _ => Constants.TotalIndex))
                 .Concat(
                     GetEntriesGroupedBy(
-                        r => true,
-                        r => null,
-                        r => null))
+                        _ => true,
+                        _ => null,
+                        _ => null))
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         result.AsEnumerable().Should().BeEquivalentTo(expectedResult.AsEnumerable());
     }
@@ -114,11 +114,11 @@ public sealed class CubeResultTests
                 .Concat(
                     GetEntriesGroupedBy(
                         r => BInDimension(r.B),
-                        r => Constants.TotalIndex))
+                        _ => Constants.TotalIndex))
                 .Concat(
                     GetEntriesGroupedBy(
-                        r => true,
-                        r => null))
+                        _ => true,
+                        _ => null))
                 .ToDictionary(kvp => kvp.Key.ToList(), kvp => kvp.Value)
                 .ToList();
         result

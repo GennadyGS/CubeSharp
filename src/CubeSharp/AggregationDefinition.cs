@@ -30,10 +30,7 @@ public static class AggregationDefinition
         Expression<Func<TSource, T>> valueSelector,
         Func<T, T, T> aggregationFunction,
         T seedValue) =>
-        new AggregationDefinition<TSource, T>(
-            valueSelector,
-            aggregationFunction,
-            seedValue);
+        new(valueSelector, aggregationFunction, seedValue);
 
     /// <summary>
     /// Creates the instance of <seealso cref="AggregationDefinition{TSource,T}"/>

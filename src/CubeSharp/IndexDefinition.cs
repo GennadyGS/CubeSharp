@@ -29,7 +29,7 @@ public static class IndexDefinition
         T? value,
         string? title = null,
         params IndexDefinition<T>[] children) =>
-        new IndexDefinition<T>(value, title, children, false);
+        new(value, title, children, false);
 
     /// <summary>
     /// Creates the instance of <seealso cref="IndexDefinition{T}"/> with child index
@@ -54,5 +54,5 @@ public static class IndexDefinition
     public static IndexDefinition<T> Create<T>(
         IndexDefinition<T>[] children, T? value, string? title = null)
         where T : notnull =>
-        new IndexDefinition<T>(value, title, children, true);
+        new(value, title, children, true);
 }

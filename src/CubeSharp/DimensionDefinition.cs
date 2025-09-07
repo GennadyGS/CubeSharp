@@ -37,10 +37,7 @@ public static class DimensionDefinition
         string? title = null,
         params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
-        new DimensionDefinition<TSource, TIndex>(
-            indexSelector.MapResultToCollection(),
-            title,
-            indexDefinitions);
+        new(indexSelector.MapResultToCollection(), title, indexDefinitions);
 
     /// <summary>
     /// Creates the instance of <seealso cref="DimensionDefinition{TSource,TIndex}"/>
@@ -71,7 +68,7 @@ public static class DimensionDefinition
         string? title = null,
         params IndexDefinition<TIndex>[] indexDefinitions)
         where TIndex : notnull =>
-        new DimensionDefinition<TSource, TIndex>(indexSelector, title, indexDefinitions);
+        new(indexSelector, title, indexDefinitions);
 
     /// <summary>
     /// Creates the instance of <seealso cref="DimensionDefinition{TSource,TIndex}"/>

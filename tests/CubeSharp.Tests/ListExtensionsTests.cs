@@ -63,7 +63,7 @@ public sealed class ListExtensionsTests
     private static IEnumerable<TestCaseModel> GetTestData() =>
         new List<TestCaseModel>
         {
-            new TestCaseModel
+            new()
             {
                 Input =
                 [
@@ -72,7 +72,7 @@ public sealed class ListExtensionsTests
                 ],
                 ExpectedOutput = [],
             },
-            new TestCaseModel
+            new()
             {
                 Input =
                 [
@@ -80,7 +80,7 @@ public sealed class ListExtensionsTests
                 ],
                 ExpectedOutput = [],
             },
-            new TestCaseModel
+            new()
             {
                 Input = [],
                 ExpectedOutput =
@@ -88,7 +88,7 @@ public sealed class ListExtensionsTests
                     [],
                 ],
             },
-            new TestCaseModel
+            new()
             {
                 Input =
                 [
@@ -103,7 +103,7 @@ public sealed class ListExtensionsTests
                     SourceArr6,
                 ],
             },
-            new TestCaseModel
+            new()
             {
                 Input =
                 [
@@ -123,7 +123,7 @@ public sealed class ListExtensionsTests
                     SourceArr15,
                 ],
             },
-            new TestCaseModel
+            new()
             {
                 Input =
                 [
@@ -137,7 +137,7 @@ public sealed class ListExtensionsTests
                     SingleElementArr3,
                 },
             },
-            new TestCaseModel
+            new()
             {
                 Input =
                 [

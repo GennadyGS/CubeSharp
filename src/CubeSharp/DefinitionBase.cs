@@ -4,8 +4,7 @@
 /// <remarks>Contains common functionality of the all definitions.</remarks>
 public class DefinitionBase
 {
-    private readonly Dictionary<string, object> _metadata =
-        new Dictionary<string, object>();
+    private readonly Dictionary<string, object> _metadata = new();
 
     internal DefinitionBase(string? title)
     {

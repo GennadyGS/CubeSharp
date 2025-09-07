@@ -128,5 +128,5 @@ public sealed class EquatableListTests
             : null;
 
     private EquatableList<int> GetList(int start, int count) =>
-        new EquatableList<int>(Enumerable.Range(start, count).ToList());
+        new(Enumerable.Range(start, count).ToList());
 }

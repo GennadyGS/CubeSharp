@@ -1,15 +1,13 @@
 ﻿# CubeSharp
 
-High-performance, zero-dependency (runtime) .NET library for constructing and querying in-memory multidimensional data cubes (a.k.a. OLAP style aggregates) using strongly-typed, testable C# code.
+High-performance .NET library for constructing and querying in-memory multidimensional data cubes (a.k.a. OLAP style aggregates) using strongly-typed, testable C# code.
 
-NuGet: [![NuGet](https://img.shields.io/nuget/v/Cube.svg)](https://www.nuget.org/packages/Cube)  
+NuGet: [![NuGet](https://img.shields.io/nuget/v/CubeSharp.svg)](https://www.nuget.org/packages/CubeSharp)
 Targets: .NET 8, .NET 9
 
 > Detailed walkthroughs and additional examples are provided in the notebooks:
-> - Tutorial (concepts, end‑to‑end): doc/01-Tutorial.ipynb
-> - Cookbook / patterns: doc/02-Examples.ipynb
->
-> A concise narrative version is also in: doc/CubeSharp.md
+> - Tutorial (concepts, end‑to‑end): [01-Tutorial.ipynb](doc/01-Tutorial.ipynb)
+> - Cookbook / patterns: [02-Examples.ipynb](doc/02-Examples.ipynb)
 
 ---
 ## Contents
@@ -170,6 +168,6 @@ MIT (see LICENSE). Packaged README references this file.
 
 ---
 ## Additional References
-- doc/01-Tutorial.ipynb – Step-by-step tutorial
-- doc/02-Examples.ipynb – Cookbook patterns & helper extensions
+- Tutorial (concepts, end‑to‑end): [01-Tutorial.ipynb](doc/01-Tutorial.ipynb)
+- Cookbook / patterns: [02-Examples.ipynb](doc/02-Examples.ipynb)
 - tests/ – Specification by example

@@ -1,10 +1,11 @@
 ﻿# CubeSharp
 
+[![NuGet](https://img.shields.io/nuget/v/CubeSharp.svg)](https://www.nuget.org/packages/CubeSharp)
+![Build](https://img.shields.io/github/actions/workflow/status/GennadyGS/CubeSharp/build.yml?branch=master&style=flat-square)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![.NET](https://img.shields.io/badge/.NET-8.0%2B-blue.svg)](https://dotnet.microsoft.com/)
+
 High-performance .NET library for constructing and querying in-memory multidimensional data cubes (a.k.a. OLAP style aggregates) using strongly-typed, testable C# code.
-
-NuGet: [![NuGet](https://img.shields.io/nuget/v/CubeSharp.svg)](https://www.nuget.org/packages/CubeSharp)
-
-Targets: .NET 8, .NET 9
 
 Detailed walkthroughs and additional examples are provided in the notebooks:
 
